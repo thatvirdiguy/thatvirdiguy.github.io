@@ -1,6 +1,6 @@
 This is my write-up/walkthrough for [the Hack The Box machine, Lame](https://app.hackthebox.com/machines/Lame). It's a Linux machine, rated "Easy", with 10.10.10.3 as its IP address.
 
-![Alt text](/images/2022-02-16-hack-the-box-lame-01.JPG "Lame Info Card"){: .center-image }
+![Alt text](/images/2022-02-16-hack-the-box-lame-01.JPG "Lame Info Card")
 
 I started with an nmap scan—
 
