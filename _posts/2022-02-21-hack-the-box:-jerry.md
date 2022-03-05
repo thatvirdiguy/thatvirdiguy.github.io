@@ -30,7 +30,7 @@ OS and Service detection performed. Please report any incorrect results at https
 Nmap done: 1 IP address (1 host up) scanned in 51.05 seconds
 ```
 
-—that told me we've got Apache Tomcat running on port 8080 here. Nothing else of interest, and that told me I shouldn't look for anything else. This box is to be pwned by exploiting an Apache Tomcat vulnerability.
+—that told me we've got Apache Tomcat running on port 8080 here. Nothing else of interest, which was their hint that we shouldn't need look for anything else. This box is to be pwned by exploiting an Apache Tomcat vulnerability.
 
 Opening 10.10.10.95:8080 on my browser told me we are dealing with version 7.0.88 of Apache Tomcat. (Well, the nmap scan also pointed that out, but it's good to hit the URL once, if you can.)
 
@@ -50,7 +50,7 @@ Apache Tomcat < 9.0.1 (Beta) / < 8.5.23 / < 8.0.47 / < 7.0.8 - JSP Upload Bypass
 Shellcodes: No Results
 ```
 
-—pointed out that there is indeed a potential vulnerability out there for me to exploit. I started reading more into this. Turns out, if you have valid credentials for the "manager" application on the server, you can upload a backdoor in the form of a .war file on to the server, that should in turn get you a reverse shell. [This](https://www.hackingarticles.in/multiple-ways-to-exploit-tomcat-manager/) is a good article on this, and the one I consulted for this hack.
+—pointed out that there is indeed a potential vulnerability out there for me to exploit. I started reading more about it. Turns out, if you have valid credentials for the "manager" application on the server, you can upload a backdoor in the form of a .war file on to the server, that should in turn get you a reverse shell. [This](https://www.hackingarticles.in/multiple-ways-to-exploit-tomcat-manager/) is a good article on this vulnerability, and the one I consulted extensively for this hack.
 
 But, in order for me to exploit this vulnerability, I needed the right credentials on this "manager" application – 10.10.10.95:8080/manager.
 
@@ -174,9 +174,7 @@ msf6 >
 
 whoa.
 
-"Alright, how do I use it, though?" 
-
-Thankfully, I stumbled upon [this](https://www.offensive-security.com/metasploit-unleashed/msfconsole-commands/) article which was fairly thorough. I ran a search on "tomcat manager":
+After the initial 'Alright, how do I use it, though?', thankfully, I stumbled upon [this](https://www.offensive-security.com/metasploit-unleashed/msfconsole-commands/) article which was fairly thorough. I ran a search on "tomcat manager":
 
 
 ```
@@ -198,7 +196,7 @@ Matching Modules
 Interact with a module by name or index. For example info 5, use 5 or use auxiliary/scanner/http/tomcat_mgr_login
 ```
 
-That "tomcat_mgr_login" one seemed to be what we want since we first need the right credentials on this server, before we can even think of putting a backdoor that will get us the reverse shell.
+That "tomcat_mgr_login" one seemed to be what we want since we first need the right credentials on this server, before we can even think of putting in a backdoor that will get us the reverse shell.
 
 
 ```
