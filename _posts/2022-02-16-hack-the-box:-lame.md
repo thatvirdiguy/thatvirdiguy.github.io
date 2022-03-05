@@ -201,9 +201,9 @@ Shellcodes: No Results
 
 That "'Username' map script' Command Execution" looked interesting, so I started reading more on that –  which lead me to [CVE-2007-2447](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-2447). "[...] allows remote attackers to execute arbitrary commands via shell". Perfect.
 
-I looked it up in Rapid7's Vulnerability & Exploit Database and got a simplied explaination of what makes this vulnerability tick. Apparently, passing a username containing shell meta characteres confuses one of the functions that calls external scripts defined in config. Or something like that. [Here](https://www.samba.org/samba/security/CVE-2007-2447.html) is Samba's blog for this vulnerability on their product and [here](https://www.rapid7.com/db/modules/exploit/multi/samba/usermap_script/) is Rapid7's explaination of it.
+I looked it up in Rapid7's Vulnerability & Exploit Database and got a simplified explaination of what makes this vulnerability tick. Apparently, passing a username containing shell meta characteres confuses one of the functions that calls external scripts defined in Samba config. Or something like that. [Here](https://www.samba.org/samba/security/CVE-2007-2447.html) is Samba's blog post for this vulnerability on their product and [here](https://www.rapid7.com/db/modules/exploit/multi/samba/usermap_script/) is Rapid7's explaination of it.
 
-I didn't want to use Metasploit on this and just be done with it, though looking at that Rapid7 page, that does seem to be the easiest way to pwn this box. [Line 74](https://github.com/rapid7/metasploit-framework/blob/master//modules/exploits/multi/samba/usermap_script.rb#L74) of source code linked on that page did give me an idea, though. I was hoping something like the following would work—
+I didn't want to use Metasploit on this and just be done with it, though looking at that Rapid7 page, that does seem to be the easiest way to pwn this box. [Line 74](https://github.com/rapid7/metasploit-framework/blob/master//modules/exploits/multi/samba/usermap_script.rb#L74) of the source code linked on that page did give me an idea, though. I was hoping something like the following would work—
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
