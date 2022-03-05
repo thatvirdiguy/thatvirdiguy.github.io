@@ -1,6 +1,6 @@
 This is my write-up/walkthrough for [the Hack The Box machine, Jerry](https://app.hackthebox.com/machines/Jerry). It's a Windows machine, rated "Easy", with 10.10.10.95 as its IP address.
 
-![Alt text](/images/2022-02-22-hack-the-box-jerry-01.JPG "Jerry Info Card")
+![Alt text](/images/jerry/2022-02-21-hack-the-box-jerry-01.JPG "Jerry Info Card")
 
 I started with an nmap scan—
 
@@ -34,7 +34,7 @@ Nmap done: 1 IP address (1 host up) scanned in 51.05 seconds
 
 Opening 10.10.10.95:8080 on my browser told me we are dealing with version 7.0.88 of Apache Tomcat. (Well, the nmap scan also pointed that out, but it's good to hit the URL once, if you can.)
 
-![Alt text](/images/2022-02-22-hack-the-box-jerry-02.JPG "Apache Tomcat 7.0.88")
+![Alt text](/images/jerry/2022-02-21-hack-the-box-jerry-02.JPG "Apache Tomcat 7.0.88")
 
 Running searchsploit on "Apache Tomcat 7.0.88"—
 
@@ -54,7 +54,7 @@ Shellcodes: No Results
 
 But, in order for me to exploit this vulnerability, I needed the right credentials on this "manager" application – 10.10.10.95:8080/manager.
 
-![Alt text](/images/2022-02-22-hack-the-box-jerry-03.JPG "Manager")
+![Alt text](/images/jerry/2022-02-21-hack-the-box-jerry-03.JPG "Manager")
 
 Ran some [common username+password combos](https://github.com/netbiosX/Default-Credentials/blob/master/Apache-Tomcat-Default-Passwords.mdown), but none broke through.
 
@@ -324,7 +324,7 @@ msf6 auxiliary(scanner/http/tomcat_mgr_login) >
 
 Got 'em! Our username+password combo is tomcat:s3cret.
 
-![Alt text](/images/2022-02-22-hack-the-box-jerry-04.JPG "Console")
+![Alt text](/images/jerry/2022-02-21-hack-the-box-jerry-04.JPG "Console")
 
 Now that I had access to the Application Manager on the server, I could deploy a .war file. I decided to use [mgeeky's tomcatWarDeployer](https://github.com/mgeeky/tomcatWarDeployer), that was mentioned on the article I had been consulting since it looked like a more hands-on way of getting through, but—
 
@@ -457,7 +457,7 @@ shell.war
 
 Uploaded this file on the server—
 
-![Alt text](/images/2022-02-22-hack-the-box-jerry-05.JPG "Deploy")
+![Alt text](/images/jerry/2022-02-21-hack-the-box-jerry-05.JPG "Deploy")
 
 —while I had an `nc` listening for connections on port 1234 on my machine.
 
