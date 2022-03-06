@@ -187,7 +187,7 @@ smb: \Public\>
 smb: \Public\> ^C
 ```
 
-I then spent some time reading more about what this "`desktop.ini`" and "`NTUSER.DAT`" are, and if there is potential exploit out there in the wild for me to use, but that wasn't the right approach. I figured out the right approach when I did a `searchsploit` on "windows smb" but limited the results to Windows 7 since, as per the nmap scan, that the OS this box is running.
+I then spent some time reading more about what this "`desktop.ini`" and "`NTUSER.DAT`" are, and if there is potential exploit out there in the wild for me to use, but that wasn't the right approach. I figured out the right approach when I did a `searchsploit` on "windows smb" but limited the results to Windows 7 since, as per the nmap scan, that's the operating system this box is running.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
@@ -219,7 +219,7 @@ VideoLAN VLC Media Player 1.0.0/1.0.1 - 'smb://' URI Handling Buffer Overflow (P
 
 ```
 
-That "EternalBlue" looked promising, not just because it allowed remote code execution via SMB, but because it tied to the name of the box. Reading more on it led me to [CVE-2017-0144](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-0144), [this](https://research.checkpoint.com/2017/eternalblue-everything-know/) excellent explainer, and [d4t4s3c's Win7Blue](https://github.com/d4t4s3c/Win7Blue) tool to exploit this vulnerability.
+That "EternalBlue" looked promising, not just because it allowed remote code execution via SMB, but because it tied to the name of the box – perhaps the biggest hint yet. Reading more on it led me to [CVE-2017-0144](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-0144), [this](https://research.checkpoint.com/2017/eternalblue-everything-know/) excellent explainer, and [d4t4s3c's Win7Blue](https://github.com/d4t4s3c/Win7Blue) tool to exploit this vulnerability.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
