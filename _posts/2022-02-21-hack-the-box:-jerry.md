@@ -348,10 +348,10 @@ LICENSE  README.md  requirements.txt  screen1.png  tomcatWarDeployer.py
 └─$ pip install -r requirements.txt                                                                                                                                                                                                    1 ⨯
 DEPRECATION: Python 2.7 reached the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 is no longer maintained. pip 21.0 will drop support for Python 2.7 in January 2021. More details about Python 2 support in pip can be found at https://pip.pypa.io/en/latest/development/release-process/#python-2-support pip 21.0 will remove support for this functionality.                                                                                    
 Defaulting to user installation because normal site-packages is not writeable
-Requirement already satisfied: mechanize in /home/kali/.local/lib/python2.7/site-packages (from -r requirements.txt (line 1)) (0.4.7)
-Requirement already satisfied: html5lib>=0.999999999 in /home/kali/.local/lib/python2.7/site-packages (from mechanize->-r requirements.txt (line 1)) (1.1)
-Requirement already satisfied: six>=1.9 in /home/kali/.local/lib/python2.7/site-packages (from html5lib>=0.999999999->mechanize->-r requirements.txt (line 1)) (1.16.0)
-Requirement already satisfied: webencodings in /home/kali/.local/lib/python2.7/site-packages (from html5lib>=0.999999999->mechanize->-r requirements.txt (line 1)) (0.5.1)
+Requirement already satisfied: mechanize in /home/thatvirdiguy/.local/lib/python2.7/site-packages (from -r requirements.txt (line 1)) (0.4.7)
+Requirement already satisfied: html5lib>=0.999999999 in /home/thatvirdiguy/.local/lib/python2.7/site-packages (from mechanize->-r requirements.txt (line 1)) (1.1)
+Requirement already satisfied: six>=1.9 in /home/thatvirdiguy/.local/lib/python2.7/site-packages (from html5lib>=0.999999999->mechanize->-r requirements.txt (line 1)) (1.16.0)
+Requirement already satisfied: webencodings in /home/thatvirdiguy/.local/lib/python2.7/site-packages (from html5lib>=0.999999999->mechanize->-r requirements.txt (line 1)) (0.5.1)
 
 ┌──(thatvirdiguy㉿kali)-[~/tomcatWarDeployer]
 └─$ python2 tomcatWarDeployer.py --help                                                                                                                                                  1 ⨯

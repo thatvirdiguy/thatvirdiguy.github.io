@@ -71,7 +71,7 @@ Nmap done: 1 IP address (1 host up) scanned in 83.22 seconds
 └─$ ftp 10.10.10.3  
 Connected to 10.10.10.3.
 220 (vsFTPd 2.3.4)
-Name (10.10.10.3:kali): anonymous
+Name (10.10.10.3:thatvirdiguy): anonymous
 331 Please specify the password.
 Password:
 230 Login successful.
@@ -92,7 +92,7 @@ I had hopes SMB would get us in somehow, or at the very least, point us in the r
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
 └─$ smbclient -L 10.10.10.3                 
-Enter WORKGROUP\kali's password: 
+Enter WORKGROUP\thatvirdiguy's password: 
 Anonymous login successful
 
         Sharename       Type      Comment
