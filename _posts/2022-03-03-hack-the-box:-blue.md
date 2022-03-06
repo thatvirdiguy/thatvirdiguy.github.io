@@ -1,6 +1,6 @@
 This is my write-up/walkthrough for [the Hack The Box machine, Blue](https://app.hackthebox.com/machines/Blue). It's a Windows machine, rated "Easy", with 10.10.10.40 as its IP address.
 
-![Alt text](/images/blue/2022-02-16-hack-the-box-blue-01.JPG "Blue Info Card")
+![Alt text](/images/blue/2022-03-03-hack-the-box-blue-01.JPG "Blue Info Card")
 
 I started with an nmap scan—
 
