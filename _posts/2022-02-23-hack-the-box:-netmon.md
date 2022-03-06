@@ -152,7 +152,7 @@ Next on the list was port 80, so I pointed my browser to http://10.10.10.152 to 
 
 ![Alt text](/images/netmon/2022-02-23-hack-the-box-netmon-02.JPG "PRTG")
 
-A quick google search led me [here](https://www.paessler.com/prtg), and got a breif overview of this network monitoring tool.
+A quick google search led me [here](https://www.paessler.com/prtg), and got a brief overview of this network monitoring tool.
 
 Running a searchsploit for "prtg" gave some curious results—
 
