@@ -461,7 +461,7 @@ cat settings.php | grep -i passw
 www-data@hawk:/var/www/html/sites/default$
 ```
 
-I got a password, but I was unsure where to use. Until, that is, I went through the open ports again and recalled that SSH is open. Going by that password, I figured it belonged to a user called "`drupal`", but that wasn't the case.
+I got a password, but I was unsure where to use. Until, that is, I went through the results of the nmap scan again and recalled that SSH is open. Going by that password, I figured it belonged to a user called "`drupal`", but that wasn't the case.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
