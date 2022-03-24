@@ -192,11 +192,11 @@ IT department
 
 —but I had no idea where to use this password. So, I decided to move on to the next bit and try that open port 80. That got me to the following:
 
-![Alt text](/images/hawk/2022-03-23-hack-the-box-hawk-02.JPG "Drupal Console")
+![Alt text](/images/hawk/2022-03-23-hack-the-box-hawk-02.jpg "Drupal Console")
 
 I tried daniel:PencilKeyboardScanner123, based on that decrypted file output, but that didn't work. I then tried admin:PencilKeyboardScanner123, and that got me in.
 
-![Alt text](/images/hawk/2022-03-23-hack-the-box-hawk-03.JPG "Drupal Access")
+![Alt text](/images/hawk/2022-03-23-hack-the-box-hawk-03.jpg "Drupal Access")
 
 I looked around for a bit, trying to chalk out my next move, but it looked like I had hit a brick wall until I figured out that it might be possible to execute some PHP snippets in the console. I enabled it first—
 
@@ -208,7 +208,7 @@ I looked around for a bit, trying to chalk out my next move, but it looked like 
 
 It worked, indeed.
 
-![Alt text](/images/hawk/2022-03-23-hack-the-box-hawk-06.JPG "PHP whoami-2")
+![Alt text](/images/hawk/2022-03-23-hack-the-box-hawk-06.jpg "PHP whoami-2")
 
 The next step was to try and see if I could get a reverse shell off this. And thanks to [rshipp's shell.php](https://gist.github.com/rshipp/eee36684db07d234c1cc), I was able to do exactly that. Ran the following on the console—
 
@@ -540,7 +540,7 @@ Oops.
 
 I needed another way in. I figured I'll try the one bit on the list I hadn't checked so far—
 
-![Alt text](/images/hawk/2022-02-23-hack-the-box-hawk-08.JPG "H2 Database")
+![Alt text](/images/hawk/2022-02-23-hack-the-box-hawk-08.jpg "H2 Database")
 
 —but it didn't look like something I could exploit via the browser.
 
@@ -586,7 +586,7 @@ optional arguments:
 Ran a simple HTTP server on my machine—
 
 ```
-┌──(kali㉿kali)-[~]
+┌──(thatvirdiguy㉿kali)-[~]
 └─$ python3 -m http.server 8080                                                                                                                                                                               1 ⨯
 Serving HTTP on 0.0.0.0 port 8080 (http://0.0.0.0:8080/) ...
 
