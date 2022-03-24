@@ -477,7 +477,7 @@ drupal@10.10.10.102's password:
 
 ```
 
-I tried "`daniel`", since that was the once other username I had come across so far. It worked—
+I tried "`daniel`", since that was the only username I had come across so far. It worked—
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
@@ -540,7 +540,7 @@ Oops.
 
 I needed another way in. I figured I'll try the one bit on the list I hadn't checked so far—
 
-![Alt text](/images/hawk/2022-02-23-hack-the-box-hawk-08.jpg "H2 Database")
+![Alt text](/images/hawk/2022-03-23-hack-the-box-hawk-08.jpg "H2 Database")
 
 —but it didn't look like something I could exploit via the browser.
 
