@@ -45,11 +45,11 @@ OS and Service detection performed. Please report any incorrect results at https
 Nmap done: 1 IP address (1 host up) scanned in 473.34 seconds
 ```
 
-—that told me we've got port 22 (SSH) and port 80 (HTTP) to work with. I didn't think SSH would be open to all, so it was time to hit that IP address on my browser.
+—that told me we've got port 22 (SSH) and port 80 (HTTP) to work with. I didn't think SSH would be open to all, so I decided to check out that HTTP.
 
 ![Alt text](/images/poison/2022-03-27-hack-the-box-poison-02.JPG "Welcome screen")
 
-It was now time to try out all the files mentioned there. The most intersting of them was `listfiles.php`, which got me the following:
+It was now time to try out all the files mentioned there. The most interesting of them was `listfiles.php`, which got me the following:
 
 ![Alt text](/images/poison/2022-03-27-hack-the-box-poison-03.JPG "File list result")
 
@@ -85,7 +85,7 @@ Since I was able to run `pwdbackup.txt` on that site – a file not mentioned on
 
 ![Alt text](/images/poison/2022-03-27-hack-the-box-poison-05.JPG "/etc/passwd")
 
-I read the file wrong though, as I kept trying Charlie:Charix!2#4%6&8(0 on the only other open port I had to work with:
+I read the file wrong though, as I kept trying Charlie:Charix!2#4%6&8(0 on the only other open port I had to work with.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
@@ -102,7 +102,7 @@ Warning: Permanently added '10.10.10.84' (ED25519) to the list of known hosts.
 
 ```
 
-A second look at the file told me that it is, perhaps, "charix", and not "Charlie".
+A second look at the file suggested that it is, perhaps, "charix", and not "Charlie".
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
@@ -160,7 +160,7 @@ unzip: Passphrase required for this entry
 charix@Poison:~ %
 ```
 
-It was time to look around and see if I can get anything interesting. There was nothing in the directories, so I started looking at the running processes, open ports, etc. — anything, honestly.
+It was time to look around and see if I can get anything interesting. There was nothing in the directories, so I started looking at the running processes, open ports, etc. – anything, honestly.
 
 ```
 charix@Poison:~ % ps -aux
