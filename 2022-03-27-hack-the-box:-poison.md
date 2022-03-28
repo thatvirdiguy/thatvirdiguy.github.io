@@ -356,7 +356,7 @@ See the manual page for more information.
 
 ```
 
-It needed a password file to authenticate the connection. I wish I could say I realised immediately that I could use the contents of `secret.zip` here, but that wasn't the case. After racking my brain for several hours, I finally got the root flag.
+It needed a password file to authenticate the connection. I wish I could say I realised immediately that I could use the contents of `secret.zip` here, but that wasn't the case. After racking my brain for several hours, I was finally able to connect—
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
@@ -380,6 +380,8 @@ Same machine: preferring raw encoding
 ```
 
 ![Alt text](/images/poison/2022-03-27-hack-the-box-poison-06.JPG "VNC")
+
+—and get the root flag.
 
 ![Alt text](/images/poison/2022-03-27-hack-the-box-poison-07.JPG "root")
 
