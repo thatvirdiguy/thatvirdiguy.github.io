@@ -251,7 +251,7 @@ It did take a little while more and some further hit and trial to get the script
 —with an `nc` running on another.
 
 ```
-┌──(kali㉿kali)-[~]
+┌──(thatvirdiguy㉿kali)-[~]
 └─$ nc -lvp 1234                                                                                                                                                                                                                        1 ⨯
 listening on [any] 1234 ...
 
