@@ -1,4 +1,4 @@
 ---
 layout: page
-permalink: /files/AmandeepSinghVirdi_NordSec2017poster
+permalink: /files/AmandeepSinghVirdi_NordSec2017poster.pdf
 ---
