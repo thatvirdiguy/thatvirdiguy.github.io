@@ -29,7 +29,7 @@ In most cases, by reviewing the logs on the ZPA admin portal, you can gain valua
 
 If the user is being blocked by policy – that is, you see a `SE: Application policy blocked access` or similar [status code](https://help.zscaler.com/zpa/about-zpa-session-status-codes) in the logs – your next course of action should be determining whether this is a legitimate block. If it isn't, correct the configuration by updating the `Criteria` section of the access policy.
 
-![Alt text](/images/zpa/2023-02-04-zscaler:-Private-Access-Troubleshooting-Cheatsheet-03.jpg "zpa edit policy")
+![Alt text](/images/zpa/2023-02-04-zscaler-Private-Access-Troubleshooting-Cheatsheet-03.jpg "zpa edit policy")
 
 If, on the other hand, the user is supposed to be able to access the application as per the policies and is unable to do so, it is time shift your troubleshooting efforts to address potential authentication issues. For example, a mismatch between the [SAML attributes](https://help.zscaler.com/zpa/about-saml-attributes) known to the ZPA system and those returned by the IdP could be one of the reasons for our troubles here. It is also possible that the IdP is misconfigured in terms of which attribute to map to the 'claim' returned to Zscaler during user authentication. To address this, carefully review the SAML attribute configuration and create or reconfigure attributes as needed. Additionally, check the Access Policy Rules and ensure that both the configuration and logic are correct, keeping in mind that rules are read from the top down with a first match algorithm. Finally, confirm that the attribute values returned by the user during authentication are accurate, so that policy rule logic can be properly applied.
 
