@@ -1,6 +1,4 @@
-Rotating user access keys on a regular basis is an important component of the [security best practices for IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#rotate-credentials). And while something similar to the auto-rotation feature for KMS would be a welcome addition to IAM, it is easy to see why that isn't supported yet.
-
-Say you set up an automation in place that can rotate IAM user access keys. Or, better still, AWS announces support for auto key rotation on IAM. How do you update the credentials file (`~/.aws/credentials`) on a user's machine to reflect the new keys? And, if your company has terrible security policies, how do you update it everywhere you have called it in code?
+Rotating user access keys on a regular basis is an important component of the [security best practices for IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#rotate-credentials). And while something similar to the auto-rotation feature for KMS would be a welcome addition to IAM, it is easy to see why that isn't supported yet. Say you set up an automation that can rotate IAM user access keys. Or, better still, AWS announces support for auto key rotation on IAM. How do you update the credentials file (`~/.aws/credentials`) on a user's machine to reflect the new keys? And, if your company has terrible security policies, how do you update it everywhere you have called it in code?
 
 So, achieving fully automated end-to-end key rotation for IAM might not be feasible. How far can we go using code, though? Let's find out. 
 
@@ -114,4 +112,3 @@ keyCount=$(aws --profile pl-internal iam list-access-keys --user $user | jq '.[]
 ```
 
 And that's it! You can, of course, setup SES and define a custom template to send a mail to the user once their acess key is rotated, but I'll leave that you. Refer to [the documentation](https://docs.aws.amazon.com/cli/latest/reference/ses/index.html) as always.
-
