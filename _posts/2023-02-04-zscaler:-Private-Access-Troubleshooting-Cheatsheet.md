@@ -1,6 +1,6 @@
 I think it is apropos to begin by mentioning that this document is not meant to be exhaustive. I hope this can act as a handy cheatsheet for when that pesky Zscaler ticket lands in your pile – that is my intention here. This is, essentially, my learnings from troubleshooting Zscaler issues for over two years, documented.
 
-This cheatsheet references the study material for [Zscaler Certified Cloud Administrator - Private Access (ZCCA-PA)](https://www.zscaler.com/resources/training-certification-overview) extensively and therefore follows the same structure the study materials do, more or less. Also, statutory warning, I suppose, I experimented with [ChatGPT](https://chat.openai.com) for this cheatsheet, using it for tweaks, rewrites, etc.
+This cheatsheet references the study material for [Zscaler Certified Cloud Administrator - Private Access (ZCCA-PA)](https://www.zscaler.com/resources/training-certification-overview) extensively and therefore follows the same structure the study materials do, more or less. Also, statutory warning, I suppose: I experimented with [ChatGPT](https://chat.openai.com) for this cheatsheet, using it for tweaks, rewrites, etc.
 
 <b>Problem Localization</b>
 
@@ -10,14 +10,13 @@ When dealing with access issues on Zscaler, or any tech issues for that matter, 
 
 Well, the first thing you'd want to check is whether the end user is even connected to ZPA. That is, verify that the `Service Status` on the Zscaler Client Connector on thier machine is `ON` and, additionally, depending on how you have configured Zscaler for your organization, the `Authentication Status` is `Authenticated`. It sounds rather obvious, but trust me, this has been the resolution to quite a few tickets during my time as an engineer. You would want to cover all your bases before you get into the really technical bits so ensure the hostname/URL specified by the user for the application is correct, the port range mentioned is correct, and the application is indeed up and running as expected.
 
-![Alt text](/images/zpa/2023-02-04-zscaler-Private-Access-Troubleshooting-Cheatsheet-01.JPG "zcc authenticated")
+![Alt text](/images/zpa/2023-02-04-zscaler-Private-Access-Troubleshooting-Cheatsheet-01.jpg "zcc authenticated")
 
 If the end user is not able to authenticate through the Zscaler Client Connector, your next course of action would depend on the error they are getting. For example, if the end user receives a 'Sign in failed' error (or a similar message) during the authentication process, it typically indicates an issue with the username or password. It is possible that they are not entering the correct password, or that the username is not recognized by the IdP. This error is usually caused by a simple mistake on the part of the end user, but it can also be related to provisioning or synchronization issues with the user's account. This is where you might want to run some checks on their account: Is the user account still valid? Is the user able to reach the Identity Provider (IdP) configured for your environment? Is the IdP functioning correctly and capable of effectively processing user authentications?
 
 When a user encounters a DNS error or a '404' page during the authentication process, it usually means that the IdP login page is inaccessible. This could be caused by a faulty IdP configuration in the ZPA admin portal, but it's more likely due to an accessibility problem from the user's network. For example, a DNS configuration issue may be preventing the resolution of the hostname, or a firewall may be blocking access to it. In some cases, the end user may be able to reach the destination service but encounters a certificate error during the authentication process. This could be caused by a faulty certificate on the IdP, which would affect all users attempting to authenticate. However, it's also possible that the error is due to an intermediate system trying to perform SSL inspection on the Zscaler Client Connector traffic.
 
-Ultimately, there are three main root causes for user authentication issues on Zscaler.
-
+Ultimately, there are three main root causes for user authentication issues on Zscaler:
 1. Device/Network issues: A number of potential problems related to the end user device or the network it is connected to could potentially hinder successful authentication. Some possible causes to consider: an antivirus client or the firewall on the user's machine may interfere with the authentication traffic, the end user may have entered a bad username or incorrect password, etc.
 2. IdP issues: It is possible that the IdP simply does not recognize the end user. This could be due to synchronization or update issues with the directory. You can attempt to resolve this issue by performing a manual sync of the directory, if applicable, and checking if the user is now correctly populated in the IdP. Additionally, the IdP must be configured to accept access requests from specific 'Service Providers' (or 'Relying Parties' in the Microsoft world) so verify that Zscaler Private Access is correctly set up in the IdP as a valid Application.
 3. ZPA portal issues: Expanding on the previous point, there could be issues with the IdP configuration on the ZPA admin portal, which might need a review. To troubleshoot potential authentication issues, you can utilize the 'Import' function on the [IdP Configuration](https://help.zscaler.com/zpa/about-idp-configuration) screen to verify that you can authenticate successfully with a valid user. Another potential problem to consider is an invalid certificate on the IdP, which may have expired. Validate the certificate during your test, and refresh it if necessary.
@@ -26,11 +25,11 @@ If the end user is able to authenticate successfully, or if authentication is no
 
 In most cases, by reviewing the logs on the ZPA admin portal, you can gain valuable insight into what may be causing the user's inability to access a particular URL. This information can help you pinpoint the issue and determine your next course of action in troubleshooting. Click on `Diagnostics` on the portal and `Add Filters` – `Username`, which is generally the end user's email address, and `Application: Domain`, which is the URL/IP they are unable to access.
 
-![Alt text](/images/zpa/2023-02-04-zscaler-Private-Access-Troubleshooting-Cheatsheet-02.JPG "zpa logs")
+![Alt text](/images/zpa/2023-02-04-zscaler-Private-Access-Troubleshooting-Cheatsheet-02.jpg "zpa logs")
 
 If the user is being blocked by policy – that is, you see a `SE: Application policy blocked access` or similar [status code](https://help.zscaler.com/zpa/about-zpa-session-status-codes) in the logs – your next course of action should be determining whether this is a legitimate block. If it isn't, correct the configuration by updating the `Criteria` section of the access policy.
 
-![Alt text](/images/zpa/2023-02-04-zscaler:-Private-Access-Troubleshooting-Cheatsheet-03.JPG "zpa edit policy")
+![Alt text](/images/zpa/2023-02-04-zscaler:-Private-Access-Troubleshooting-Cheatsheet-03.jpg "zpa edit policy")
 
 If, on the other hand, the user is supposed to be able to access the application as per the policies and is unable to do so, it is time shift your troubleshooting efforts to address potential authentication issues. For example, a mismatch between the [SAML attributes](https://help.zscaler.com/zpa/about-saml-attributes) known to the ZPA system and those returned by the IdP could be one of the reasons for our troubles here. It is also possible that the IdP is misconfigured in terms of which attribute to map to the 'claim' returned to Zscaler during user authentication. To address this, carefully review the SAML attribute configuration and create or reconfigure attributes as needed. Additionally, check the Access Policy Rules and ensure that both the configuration and logic are correct, keeping in mind that rules are read from the top down with a first match algorithm. Finally, confirm that the attribute values returned by the user during authentication are accurate, so that policy rule logic can be properly applied.
 
@@ -59,7 +58,7 @@ You can download the Zscaler Analyzer from [the Proxy Test page](https://zmtr.zs
 
 The troubleshooting tools available on the `More` tab of the Zscaler Client Connector—
 
-![Alt text](/images/zpa/2023-02-04-zscaler-Private-Access-Troubleshooting-Cheatsheet-04.JPG "zcc more tab")
+![Alt text](/images/zpa/2023-02-04-zscaler-Private-Access-Troubleshooting-Cheatsheet-04.jpg "zcc more tab")
 
 —can be used to configure different log modes to control the type of information stored in the logs, or start a packet capture, or clear logs altogether. The `Restart Service` and `Repair App` are you best pals, as they were mine. When nothing helps, these two surely will.
 
