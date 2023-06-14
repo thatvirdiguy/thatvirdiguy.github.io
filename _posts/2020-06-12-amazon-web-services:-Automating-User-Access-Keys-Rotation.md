@@ -51,7 +51,7 @@ Now, let's get the "`CreateDate`" for all active keys corresponding to every IAM
 dateKeys=$(aws --profile iam list-access-keys --user $user | jq -r '.AccessKeyMetadata[]? | if .Status == "Active" then .CreateDate else empty end' 2>/dev/null)
 ```
 
-Now we get to the tricky bit. How do we compare, and do arthimatic operations, on two dates in computer-speak? The easiest way to do this would be to convert these dates into numbers, of course, and this is precisely what we would be attempting.
+Now we get to the tricky bit. How do we compare, and do arthimatic operations on, two dates in computer-speak? The easiest way to do this would be to convert these dates into numbers, of course, and this is precisely what we would be attempting.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~]
