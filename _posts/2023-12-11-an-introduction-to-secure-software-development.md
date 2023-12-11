@@ -4,7 +4,7 @@ This is my attempt to document how to build a basic DevSecOps pipeline, incorpor
 
 **01: Building the application**
 
-Let’s start with building the application that would be the cornerstone of this exercise. I’m creating a simple Nodejs app, with one GET endpoint and one POST endpoint, so that we cover at least the basics. The GET endpoint returns a simple message when called while the POST endpoint returns the hypotenuse of a right triangle when provided with the lengths of the other two sides.
+Let’s start with building the application that would be the cornerstone of this exercise. I’m creating a simple Nodejs app, with one GET endpoint and one POST endpoint, so that we cover at least the basics. The GET endpoint returns a simple message when called, while the POST endpoint returns the hypotenuse of a right triangle when provided with the lengths of the other two sides.
 
 We begin by setting the project up, which requires [initializing npm](https://docs.npmjs.com/cli/v6/commands/npm-init) at the root of our directory. This creates [the package.json](https://docs.npmjs.com/cli/v10/configuring-npm/package-json) file in the directory, which specifies, essentially, the metadata for the project and, of course, all its dependencies.
 
@@ -49,7 +49,7 @@ added 73 packages, and audited 74 packages in 12s
 found 0 vulnerabilities
 ```
 
-Let’s start building the application now by creating a new file, app.js. We initialise the libraries–
+Let’s start building the application now by creating a new file, `app.js`. We initialise the libraries–
 
 ```
 const express = require('express');
@@ -97,11 +97,12 @@ For the POST endpoint, we need to provide the application with the values for th
 app.post('/pythagoras', (req, res) => {
   const a = req.body.a
   const b = req.body.b
+
 ```
 
 Notice that we are calling the POST endpoint “/pythagoras”.
 
-Then, we will use the mathjs library to calculate the hypotenuse using [the Pythagorean Theorem]([url](https://en.wikipedia.org/wiki/Pythagorean_theorem)https://en.wikipedia.org/wiki/Pythagorean_theorem)–
+Then, we will use the mathjs library to calculate the hypotenuse using [the Pythagorean Theorem](https://en.wikipedia.org/wiki/Pythagorean_theorem)–
 
 ```
 const c = math.sqrt(math.pow(a, 2) + math.pow(b, 2));
@@ -115,14 +116,13 @@ res.status(200).json({
   });
 ```
 
-I would recommend putting an app.use(express.json()); before the POST endpoint definition because:
+I would recommend putting an `app.use(express.json());` before the POST endpoint definition because as [this tutorial](https://masteringjs.io/tutorials/express/post) tells us–
 
 >Express doesn't parse HTTP request bodies by default, but it does have a built-in middleware that populates the req.body property with the parsed request body. For example, app.use(express.json()) is how you tell Express to automatically parse JSON request bodies for you.
-Source: https://masteringjs.io/tutorials/express/post
 
 I learnt this after a lot of trial and error, that I wouldn’t wish on anyone else!
 
-Let’s test the POST endpoint now with a curl. You can use tools like Postman for the same as well, but do ensure that your app is running–
+Let’s test the POST endpoint now with a curl. You can use tools like [Postman](https://www.postman.com/) for the same as well, but do ensure that your app is running–
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~/devsecops-example]
@@ -131,7 +131,7 @@ API server listening on port 8080
 
 ```
 
-–and your are calling the right endpoint.
+–and you are calling the right endpoint.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~/devsecops-example]
@@ -145,7 +145,7 @@ Perfect. That’s the foundation done, then.
 
 **02: Containerizing the application**
 
-Currently, our application works in the local environment. But, to allow external users to be able to connect and use our application, we would need to put it out in the world. The easiest way to do this is to put it on cloud, employing the services of a public cloud service provider like AWS or Azure. For this exercise, I am using Google Cloud.
+Currently, our application works in the local environment. But, to allow external users to be able to connect and use our application, we would need to put it out in the world. The easiest way to do this is to put it on cloud, employing the services of a public cloud service provider like [AWS](https://aws.amazon.com/) or [Azure](https://azure.microsoft.com/en-us). For this exercise, I am using [Google Cloud](https://cloud.google.com/).
 
 Let’s start by containerizing our application using [Docker](https://docs.docker.com/get-started/). The first step to this is writing the [Dockerfile](https://docs.docker.com/engine/reference/builder/), which is “a text document that contains all the commands a user could call on the command line to assemble an image.” Our Dockerfile looks like the following:
 
@@ -251,7 +251,7 @@ CONTAINER ID   IMAGE                 	COMMAND              	CREATED      	STATUS
 
 **03: Connecting to the cloud**
 
-Now that we have our application in a neat little container, it’s time to actually connect to the cloud. I’ll be predominantly using the gcloud CLI for this exercise. Refer to [official Google Cloud documentation](https://cloud.google.com/sdk/docs/install#installation_instructions) for the install installations to set up gcloud CLI.
+Now that we have our application in a neat little container, it’s time to actually connect to the cloud. I’ll be predominantly using the gcloud CLI for this exercise. Refer to the [documentation](https://cloud.google.com/sdk/docs/install#installation_instructions) for the install installations to set up gcloud CLI.
 
 Once that is done, you might want to, additionally, [configure](https://cloud.google.com/sdk/gcloud/reference/config/) the CLI. For example, I had to set the project that I want to use as the default for every command I run via the gcloud CLI–
 
@@ -323,7 +323,7 @@ Finally, you can verify if your Docker image is actually there in Container Regi
 
 ![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-03.png "container registry")
 
-Now, to deploy a web application in Google Cloud off this Docker image, we are going to use [Cloud Run](https://cloud.google.com/run/docs/overview/what-is-cloud-run). The following gcloud command uses the Docker image we specify to deploy a Cloud Run service in the europe-west-1 region. Additionally, we are taking the full advantages of the serverless capabilities of Cloud Run by specifying “--platform managed”.
+Now, to deploy a web application in Google Cloud off this Docker image, we are going to use [Cloud Run](https://cloud.google.com/run/docs/overview/what-is-cloud-run). The following gcloud command uses the Docker image we specify to deploy a Cloud Run service in the europe-west-1 region. Additionally, we are taking the full advantages of the [serverless capabilities of Cloud Run](https://cloud.google.com/blog/topics/developers-practitioners/cloud-run-story-serverless-containers) by specifying “`--platform managed`”.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~/devsecops-example]
@@ -342,13 +342,13 @@ Service URL: https://devsecops-example-bquuzmv2ca-ew.a.run.app
 
 ```
 
-Note that I was prompted to pick the service name, enable Cloud Run API in my project, and whether I want to enable unauthenticated invocations to this service. I selected yes for the last bit, although, of course, unauthenticated invocations to a web application might not necessarily follow security best practices.
+Note that I was prompted to pick the service name, enable Cloud Run API in my project, and whether I want to enable unauthenticated invocations to this service. I selected yes for the last bit, although, of course, unauthenticated invocations to a web application might not necessarily follow [security best practices](https://www.sans.org/cloud-security/securing-web-application-technologies/).
 
 ![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-04.png "cloud run")
 
 **04: Continuous Delivery**
 
-We have deployed the application, we are connected to the cloud, but so far we have been building things manually. To enable [Continuous Delivery](https://en.wikipedia.org/wiki/Continuous_delivery), one of the pillars of DevSecOps, we need to set our build process in such a way that the manual is replaced by automation. To do this in Google Cloud, we will be using [Cloud Build](https://cloud.google.com/build/docs/overview).
+We have deployed the application, we are connected to the cloud, but so far we have been building things manually. To enable [Continuous Delivery](https://aws.amazon.com/devops/continuous-delivery/), one of the pillars of DevSecOps, we need to set our build process in such a way that the manual is replaced by automation. To do this in Google Cloud, we will be using [Cloud Build](https://cloud.google.com/build/docs/overview).
 
 With Cloud Build, you can define entire pipelines using a YAML file, providing a streamlined and low-maintenance approach to creating and managing your build processes. Our `cloudbuild.yaml` file–
 
@@ -393,11 +393,11 @@ steps:
   	- "--allow-unauthenticated"
 ```
 
-–essentially consists of three steps: building the Docker image, pushing it to Container Registry, and deploying a Cloud Run service off that Docker image. Note how these are the same steps we followed the when we deployed the Cloud Run service for the first time. With this YAML file, we have automated those steps.
+–essentially consists of three steps: building the Docker image, pushing it to Container Registry, and deploying a Cloud Run service off that Docker image. Note how these are the same steps we followed when we deployed the Cloud Run service for the first time. With this YAML file, we have automated those steps.
 
 However, we have not achieved full automation yet. 
 
-Once we have pushed cloudbuild.yaml to the main branch of your repo, we need to create a trigger to ensure that every time a code is pushed to our repo, a build will start automatically. Refer to [the documentation](https://cloud.google.com/build/docs/automating-builds/create-manage-triggers#connect_repo) to create and manage build triggers.
+Once we have pushed `cloudbuild.yaml` to the main branch of your repo, we need to create a trigger to ensure that every time a code is pushed to our repo, a build will start automatically. Refer to the [documentation](https://cloud.google.com/build/docs/automating-builds/create-manage-triggers#connect_repo) to create and manage build triggers.
 
 Long story short, I had to link my GitHub repository with Cloud Build–
 
@@ -405,7 +405,7 @@ Long story short, I had to link my GitHub repository with Cloud Build–
 
 ![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-06.png "link repository")
 
-–and define a trigger to start build using the Cloud Build configuration file every time there is a push to the main branch of my repo.
+–and define a trigger to start the build using the Cloud Build configuration file every time there is a push to the main branch of the repo.
 
 ![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-07.png "create trigger")
 
@@ -439,8 +439,8 @@ Compressing objects: 100% (2/2), done.
 Writing objects: 100% (3/3), 278 bytes | 278.00 KiB/s, done.
 Total 3 (delta 1), reused 0 (delta 0), pack-reused 0
 remote: Resolving deltas: 100% (1/1), completed with 1 local object.
-To github.com:thatvirdiguy/ssdlc-example.git
-   b7d93f3..167a180  main -> main
+To github.com:thatvirdiguy/devsecops-example.git
+   5f49abd..91a6b8d  main -> main
 branch 'main' set up to track 'origin/main'.
 ```
 
@@ -464,15 +464,15 @@ I enabled those in the Settings tab of Cloud Build–
 
 –and finally ended up with a successful build.
 
-![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-08.png "successful cloud build")
+![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-09.png "successful cloud build")
 
 There is that Continuous Delivery setup we want!
 
 **05: Continuous Integration**
 
-The next stage in our little exercise is to set up [Continuous Integration](https://en.wikipedia.org/wiki/Continuous_integration) in place. To do so, we need to ensure adequate unit test coverage is place. Since our repository is hosted in GitHub, it makes sense to use their native capabilities, [GitHub Actions](https://docs.github.com/en/actions), for the same.
+The next stage in our little exercise is to set up [Continuous Integration](https://learn.microsoft.com/en-us/devops/develop/what-is-continuous-integration) in place. To do so, we need to ensure adequate unit test coverage is place. Since our repository is hosted in GitHub, it makes sense to use their native capabilities, [GitHub Actions](https://docs.github.com/en/actions), for the same.
 
-Let’s define a unit test case first, though. I’ll be using the SuperTest library for it, so let’s go ahead and install that.
+Let’s define a unit test case first, though. I’ll be using [SuperTest](https://www.npmjs.com/package/supertest) for it, so let’s go ahead and install that.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~/devsecops-example]
@@ -486,7 +486,7 @@ added 21 packages, and audited 95 packages in 9s
 found 0 vulnerabilities
 ```
 
-We can also check that our package.json files has been updated since we are now using a new dependency for our project.
+We can also check that our `package.json` file has been updated, since we are now using a new dependency for our project.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~/devsecops-example]
@@ -518,7 +518,7 @@ We can also check that our package.json files has been updated since we are now 
 }
 ```
 
-To test the GET endpoint of our application, I will need to, first, create an app.test.js file and then define what response to expect when a call to that endpoint is made.
+To test the GET endpoint of our application, I will need to, first, create an `app.test.js` file and then define what response to expect when a call to that endpoint is made.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~/devsecops-example]
@@ -533,7 +533,7 @@ describe("GET /", () => {
 })
 ```
 
-It is time to write our Continuous Integration workflow, which will let us define what actions will run and when. The what for us is to check out the latest code from the repository and perform unit testing and the when is, to line up with how we have defined our Cloud Build trigger, when new code is pushed into the main branch of our repository.
+It is time to write our Continuous Integration workflow, which will let us define what actions will run and when. The _what_ for us is to check out the latest code from the repository and perform unit testing and the _when_ is, to line up with how we have defined our Cloud Build trigger, when new code is pushed into the main branch of our repository.
 
 ```
 ┌──(thatvirdiguy㉿kali)-[~/devsecops-example]
@@ -558,9 +558,9 @@ Note that the last bit of the workflow installs and configures [Jest](https://je
 
 You can then navigate to the Actions tab of your repository to see the results of the unit test:
 
-![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-08.png "unit testing failed")
+![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-10.png "unit testing failed")
 
-Which is failing because we forgot to update `package.json` to reflect the test script. Update it to replace–
+Which is failing because I forgot to update `package.json` to reflect the test script. Update it to replace–
 
 ```
   "scripts": {
@@ -574,11 +574,11 @@ Which is failing because we forgot to update `package.json` to reflect the test 
 	"test": "jest"
 ```
 
-–push to main branch, and try again.
+–and push to main branch to try again.
 
-![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-09.png "unit testing successful")
+![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-11.png "unit testing successful")
 
-That’s the GET endpoint taken care of. Now to define unit tests for the PUT endpoint.
+That’s the GET endpoint taken care of. Now to define unit test for the PUT endpoint.
 
 We follow the same process. Define what to expect when the endpoint is called with certain values–
 
@@ -597,13 +597,13 @@ describe("POST /pythagoras/", () => {
 })
 ```
 
-–and update the workflow file, if needed, and then push to the main branch to view the results.
+–and update the workflow file, and then push to the main branch to view the results.
 
-![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-10.png "both unit testing successful")
+![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-12.png "both unit testing successful")
 
 **06: Securing the application build**
 
-Achieving comprehensive test coverage is essential, but it is equally crucial to conduct security checks to ensure that our code is free from known vulnerabilities. We will be adding two security checks in our workflow file, one intended to perform Static Application Security Testing (SAST), for which we will use [Polaris](https://www.synopsys.com/software-integrity/polaris.html), and the other intended to perform Software Composition Analysis (SCA), for which we will use [Black Duck](https://www.synopsys.com/software-integrity/software-composition-analysis-tools/black-duck-sca.html#).
+Achieving comprehensive test coverage is essential, but it is equally crucial to conduct security checks to ensure that our code is free from known vulnerabilities. We will be adding two security checks in our workflow file, one intended to perform [Static Application Security Testing (SAST)](https://snyk.io/learn/application-security/static-application-security-testing/), for which we will use [Polaris](https://www.synopsys.com/software-integrity/polaris.html), and the other intended to perform [Software Composition Analysis (SCA)](https://www.crowdstrike.com/cybersecurity-101/cloud-security/software-composition-analysis/), for which we will use [Black Duck](https://www.synopsys.com/software-integrity/software-composition-analysis-tools/black-duck-sca.html#).
 
 For the SAST test, log on to the Polaris console and create an access token that you will use during this step. For this exercise, I will be using Polaris CLI, downloading its zip file off the server and running a full scan via it. Refer to the [documentation](https://sig-docs.synopsys.com/polaris/topics/c_cli-args-and-usage.html) for details on how to use the CLI to capture build outputs and analyze the artifacts.
 
@@ -628,9 +628,9 @@ For the SAST test, log on to the Polaris console and create an access token that
       	polaris analyze -w
 ```
 
-Note that we are passing access tokens and sensitive data as GitHub secrets in the workflow file. This can be done by navigating to the Settings tab of the repository and adding a repository secret under the Secrets and variables pane.
+Note that we are passing access tokens and sensitive data as [GitHub secrets](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions) in the workflow file. This can be done by navigating to the Settings tab of the repository and adding a repository secret under the Secrets and variables pane.
 
-![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-11.png "adding repository secrets")
+![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-13.png "adding repository secrets")
 
 We will be, essentially, following the same steps for the SCA test. But, unlike, Polaris, where we were downloading the CLI and executing the commands on the runner, for Black Duck, we will be using [Detect Action from Synopsys](https://github.com/synopsys-sig/detect-action#set-up-detect-action) to integrate its capabilities into our workflows. This would, of course, also need an access token with the appropriate permissions.
 
@@ -651,14 +651,14 @@ We will be, essentially, following the same steps for the SCA test. But, unlike,
 
 Once you have both the security tests in place, we can push the new code into the main branch of our repository, thereby triggering a build, and view the results on GitHub.
 
-![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-11.png "unit+security testing")
+![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-14.png "unit+security testing")
 
 Interesting footnote, though. For the Black Duck workflow, I kept getting the following error–
 
-![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-12.png "black duck error")
+![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-15.png "black duck error")
 
-–and that was only resolved after I added `github-token: ${{ secrets.GITHUB_TOKEN }}` as another parameter for detect-action, which, if you refer to the documentation is actually supposed to be optional.
+–and that was only resolved after I added `github-token: ${{ secrets.GITHUB_TOKEN }}` as another parameter for `detect-action`, which, if you refer to the documentation is actually supposed to be optional.
 
-That is it for this exercise. Of course, there can be further additions to this pipeline, both from a DevOps perspective – for example, we could look into increasing the availability of this application – and from a DevSecOps perspective – for example, we could set up alerts to facilitate Continous Monitoring through logging and analysis.
+That is it for this exercise, though. Of course, there can be further additions to this pipeline, both from a DevOps perspective – for example, we could look into increasing the [availability](https://kubernetes.io/) of this application – and from a DevSecOps perspective – for example, we could set up alerts to facilitate [Continous Monitoring](https://www.splunk.com/en_us/blog/learn/continuous-monitoring.html) through logging and analysis.
 
 Perhaps next time…
