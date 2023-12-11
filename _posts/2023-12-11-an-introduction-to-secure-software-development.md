@@ -657,7 +657,7 @@ Interesting footnote, though. For the Black Duck workflow, I kept getting the fo
 
 ![Alt text](/images/devsecops/2023-12-11-an-introduction-to-DevSecOps-15.png "black duck error")
 
-–and that was only resolved after I added `github-token: \${{ secrets.GITHUB_TOKEN \}}` as another parameter for `detect-action`, which, if you refer to the documentation is actually supposed to be optional.
+–and that was only resolved after I added `github-token` as another parameter for `detect-action`, which, if you refer to the documentation is actually supposed to be optional.
 
 That is it for this exercise, though. Of course, there can be further additions to this pipeline, both from a DevOps perspective – for example, we could look into increasing the [availability](https://kubernetes.io/) of this application – and from a DevSecOps perspective – for example, we could set up alerts to facilitate [Continous Monitoring](https://www.splunk.com/en_us/blog/learn/continuous-monitoring.html) through logging and analysis.
 
