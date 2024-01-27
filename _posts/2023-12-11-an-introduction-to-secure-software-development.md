@@ -172,7 +172,7 @@ CMD [ "node", "app.js" ]
 ```
 
 Here, we are: 
- - using node:18-alpine as the base image, getting it from the official [DockerHub]((https://hub.docker.com/_/node/) repository
+ - using node:18-alpine as the base image, getting it from the official [DockerHub](https://hub.docker.com/_/node/) repository
  - informing Docker that the container listens on port 8080 at runtime
  - running a simple bash command that creates the directory needed for node modules
  - specifying a working directory for the following commands in the Dockerfile
