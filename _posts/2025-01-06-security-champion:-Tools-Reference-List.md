@@ -1,4 +1,4 @@
-This is an inexhaustive reactive scanning list, intended to be only used a reference.
+This is an inexhaustive security scanning list, intended to be only used a reference.
 
 | Check                    | Tools                                                                                                                                                                                                                               | 
 |:------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
