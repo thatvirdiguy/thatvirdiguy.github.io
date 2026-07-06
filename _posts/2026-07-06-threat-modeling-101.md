@@ -196,7 +196,7 @@ The guiding question here is: Can someone do something they shouldn't be authori
 | Information Disclosure | Confidentiality   | An attacker extract data from a database containing user account info.                                      |
 | Denial of Service      | Availability      | An attacker locks a legitimate user out of their account by performing many failed authentication attempts. |
 | Elevation of Privilege | Authorization     | An attacker tampers with a JWT to change their role.                                                        |
-<br>
+
 At this point you might be wondering:
 
 _"This all makes sense – but how do I actually use STRIDE during a threat modelling exercise?"_
