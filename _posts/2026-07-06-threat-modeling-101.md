@@ -197,6 +197,7 @@ The guiding question here is: Can someone do something they shouldn't be authori
 | Denial of Service      | Availability      | An attacker locks a legitimate user out of their account by performing many failed authentication attempts. |
 | Elevation of Privilege | Authorization     | An attacker tampers with a JWT to change their role.                                                        |
 
+
 At this point you might be wondering:
 
 _"This all makes sense – but how do I actually use STRIDE during a threat modelling exercise?"_
@@ -237,6 +238,7 @@ Where STRIDE categorizes threats into six buckets, PASTA is risk-centric. Rather
 | 6. Attack Modeling                     | - Attack Surface Analysis <br> - Attack Tree Development / Attack Library Mgt. <br> - Attack to Vulnerability & Exploit Analysis Using Attack Trees                                                                                        |
 | 7. Risk & Impact Analysis              | - Qualify & Quantify Business Impact <br> - Countermeasure Identification and Residual Risk Analysis <br> - ID Risk Mitigation Strategies                                                                                                  |
 
+
 One of PASTA's strengths is that it encourages you to think beyond individual vulnerabilities. It asks not only what could happen, but also how likely it is, what the business impact would be, and which risks deserve immediate attention.
 
 #### DREAD
@@ -260,6 +262,7 @@ Once you've identified a potential threat, DREAD provides a simple framework for
 | Exploitability   | What’s Required to Launch the Attack?      | 2.5: Advanced programming and networking skills <br> 5: Available attack tools <br> 9: Web application proxies <br> 10: Web browser                                                                                                                               |
 | Affected Users   | How Many People Would the Attack Affect?   | 0: No users <br> 2.5: Individual user <br> 6: Few users <br> 8: Administrative users <br> 10: All users                                                                                                                                                           |
 | Discoverability  | How Easy Is the Vulnerability to Discover? | 0: Hard to discover the vulnerability <br> 5: HTTP requests can uncover the vulnerability <br> 8: Vulnerability found in the public domain <br> 10: Vulnerability found in web address bar or form                                                                |
+
 
 The key idea behind DREAD is that it introduces a degree of consistency into risk assessment. Rather than relying solely on intuition, teams evaluate each threat against the same set of criteria, making it easier to compare risks and prioritize remediation efforts. DREAD isn't as widely used today as it once was – many organizations have adopted alternative risk-scoring methodologies – but it remains a useful way to understand the factors that contribute to the overall severity of a threat.
 
@@ -392,6 +395,7 @@ Earlier, we introduced the four fundamental questions of threat modelling. By no
 | What can go wrong?                | Walk through each user story and identify potential threats.                                                                                                                       |
 | What are we going to do about it? | Define the security controls and countermeasures required to mitigate those threats.                                                                                               |
 | Did we do an acceptable job?      | Verify that the agreed mitigations have been implemented and are effective. This validation may involve design reviews, testing, or independent verification by the security team. |
+
 
 Everything we've discussed throughout this guide ultimately comes back to these four questions. Whether you use STRIDE, PASTA, Story-Driven Threat Modelling, Mozilla's Rapid Risk Assessment, or a process of your own, every successful threat model seeks to answer them thoroughly and honestly.
 
