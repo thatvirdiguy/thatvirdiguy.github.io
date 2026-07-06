@@ -6,7 +6,7 @@ Whether you're completely new to threat modelling or have heard terms like STRID
 
 We'll begin by answering the most fundamental question: What is threat modelling? Along the way, we'll look at a few commonly accepted definitions and discuss why threat modelling is an essential activity during the software development lifecycle – and why its value extends well beyond development itself. From there, we'll introduce some of the terminology you'll encounter during a threat modelling exercise. Understanding concepts such as threats, vulnerabilities, assets, risks, and mitigations makes it much easier to follow discussions and contribute effectively. Next, we'll explore some of the most widely used threat modelling methodologies, including STRIDE, and discuss where each approach fits. Finally, we'll walk through a practical threat modelling process based on a combination of established methodologies, before bringing everything together with a simple, end-to-end example.
 
-#### What is Threat Modeling?
+### What is Threat Modeling?
 
 If you need a textbook definition, it's something along the lines of: Threat modelling is a systematic approach to identifying, assessing, and mitigating security threats.
 
@@ -32,7 +32,7 @@ The earlier you perform a threat model, the greater the impact it can have.
 
 Ideally, threat modelling begins during feature design – while requirements are being discussed, diagrams are being sketched on whiteboards, and architectural decisions are still fluid. Sprint planning, design reviews, and architecture discussions are all excellent opportunities to introduce threat modelling. Of course, that ideal isn't always achievable. Teams move quickly and priorities can change. That's okay. So, at whatever stage of the SSDLC you feel "hey, we should probably do a threat model" that is a good enough stage to do a threat model at.
 
-#### The Four Questions of Threat Modelling
+### The Four Questions of Threat Modelling
 
 No matter which methodology or framework you use, nearly every threat modelling exercise revolves around four fundamental questions:
 
@@ -43,7 +43,7 @@ No matter which methodology or framework you use, nearly every threat modelling 
 
 Everything else – whether it's STRIDE, attack trees, kill chains, or any other methodology – is simply a structured way of helping you answer those four questions consistently and thoroughly.
 
-#### A Quick Refresher on Some Key Terms
+### A Quick Refresher on Some Key Terms
 
 Before we dive into threat modelling methodologies and processes, let's quickly revisit a few terms that you'll hear repeatedly throughout this guide – and throughout any threat modelling exercise you participate in or lead.
 
@@ -98,13 +98,13 @@ You want to focus more on identifying the shortcomings in the design of the syst
 
 Finding bugs during a threat modelling exercise is certainly valuable. Bugs often become entry points for attackers and should be addressed. But the real value of threat modelling lies in uncovering architectural flaws before they're built into the product. Design flaws are generally more expensive to fix once a system is in production, which is precisely why threat modelling aims to identify them as early as possible. In short, bugs are implementation problems. Flaws are design problems. A mature threat modelling practice focuses on both – but prioritizes finding the latter.
 
-#### Threat Modelling Methods and Approaches
+### Threat Modelling Methods and Approaches
 
 Now that we've established what threat modelling is, let's look at some of the methods and approaches available to help us perform it. In this guide, we'll discuss three threat modelling methods – the techniques you can use to identify threats – and two broader approaches, which are essentially frameworks for structuring a threat modelling exercise.
 
 Before we get into the specifics, though, there's one important point I'd like to make. These methods and approaches are the foundations upon which modern threat modelling is built. They're based on years of research and they provide an excellent starting point. But, they are not the holy texts of threat modelling. There isn't a rule that says you must use STRIDE, or that every threat model has to follow Story-Driven Threat Modelling exactly as it was originally proposed. If you deviate from these methodologies, nobody is going to revoke your security badge. Every team eventually develops its own way of threat modelling. You might start with STRIDE and discover that one part of it doesn't fit your development process. Or perhaps your team primarily uses Story-Driven Threat Modelling but has adapted certain aspects to better suit your architecture and sprint cadence. That's perfectly normal. Threat modelling is ultimately a collaborative thinking exercise, not a compliance exercise. That said, if you're leading a threat model for the first time, having some structure is invaluable. These methodologies provide that structure. Think of them as proven starting points rather than rigid rulebooks.
 
-### STRIDE
+#### STRIDE
 
 Developed by Microsoft, STRIDE is arguably the most mature and widely adopted threat modelling methodology in use today. Because of its popularity and practicality, we'll spend a little more time on it than on the other methods.
 
@@ -217,7 +217,7 @@ Finally, consider Denial of Service. Identify components whose failure would aff
 
 This isn't the only way to apply STRIDE, nor is it the "correct" order. It's simply a practical workflow that helps ensure each category is considered without feeling overwhelmed. Like everything else in threat modelling, adapt it to suit your team and your systems.
 
-### PASTA
+#### PASTA
 
 The next threat modelling method we'll look at is PASTA.
 
@@ -239,7 +239,7 @@ Where STRIDE categorizes threats into six buckets, PASTA is risk-centric. Rather
 
 One of PASTA's strengths is that it encourages you to think beyond individual vulnerabilities. It asks not only what could happen, but also how likely it is, what the business impact would be, and which risks deserve immediate attention.
 
-### DREAD
+#### DREAD
 
 The final threat modelling method we'll discuss is DREAD.
 
@@ -263,7 +263,7 @@ Once you've identified a potential threat, DREAD provides a simple framework for
 
 The key idea behind DREAD is that it introduces a degree of consistency into risk assessment. Rather than relying solely on intuition, teams evaluate each threat against the same set of criteria, making it easier to compare risks and prioritize remediation efforts. DREAD isn't as widely used today as it once was – many organizations have adopted alternative risk-scoring methodologies – but it remains a useful way to understand the factors that contribute to the overall severity of a threat.
 
-### Story-Driven Threat Modelling
+#### Story-Driven Threat Modelling
 
 So far, we've looked at methods for identifying and evaluating threats. Let's now shift gears and talk about an approach to threat modelling: Story-Driven Threat Modelling. It is exactly what it sounds like: performing threat modelling against a user story or a specific piece of functionality.
 
@@ -316,7 +316,7 @@ The exact recommendations will depend on the architecture, the technology stack,
 
 That is Story-Driven Threat Modelling in a nutshell.
 
-### Mozilla's Rapid Risk Assessment
+#### Mozilla's Rapid Risk Assessment
 
 The final approach I'd like to mention isn't strictly a threat modelling methodology, but I think it's worth discussing because there are several ideas you can borrow regardless of how you conduct threat modelling.
 
@@ -350,7 +350,7 @@ It's worth remembering that Rapid Risk Assessment isn't intended to replace a fu
 
 Even if you never formally adopt Mozilla's methodology, there are valuable lessons to take away: involve the right people, focus on the highest risks, document decisions as you make them, and avoid turning every threat modelling session into a marathon.
 
-##### Threat Modelling For Your Org
+### Threat Modelling For Your Org
 
 We've now covered several threat modelling methodologies and approaches. The obvious question is: How do we actually do threat modelling at our organization?
 
@@ -382,7 +382,7 @@ Whenever a plausible threat is identified, discuss possible countermeasures befo
 
 A threat model only delivers value if its findings result in improvements to the product. Once the workshops have concluded, convert the identified risks into actionable engineering work. Create backlog items for the product team, document the agreed countermeasures, assign owners where appropriate, and ensure that remediation work becomes part of the normal development process rather than a standalone security initiative. Ultimately, the objective isn't simply to produce a threat model. It is to integrate threat modelling into the Secure Software Development Lifecycle (SSDLC) so that identifying and addressing security risks becomes part of how software is built.
 
-#### Revisiting the Four Questions
+### Revisiting the Four Questions
 
 Earlier, we introduced the four fundamental questions of threat modelling. By now, you can probably see how they map directly to the process we've just discussed:
 
@@ -395,7 +395,7 @@ Earlier, we introduced the four fundamental questions of threat modelling. By no
 
 Everything we've discussed throughout this guide ultimately comes back to these four questions. Whether you use STRIDE, PASTA, Story-Driven Threat Modelling, Mozilla's Rapid Risk Assessment, or a process of your own, every successful threat model seeks to answer them thoroughly and honestly.
 
-#### Putting It into Practice: A Simple Threat Modelling Exercise
+### Putting It into Practice: A Simple Threat Modelling Exercise
 
 We've covered the theory, the terminology, the methodologies, and the process. Now let's put everything together with a simple example. The objective of this exercise isn't to teach another methodology or demonstrate the "correct" way to conduct a threat model. Instead, it's to show you how to think during a threat modelling exercise. Throughout this guide, we've introduced concepts such as user stories, abuse stories, threat scenarios, and countermeasures. This example simply demonstrates how they fit together in practice. You may eventually develop a different workflow that better suits your team, and that's perfectly fine. The goal here is simply to provide enough structure that you're never left wondering "okay... where do I even start?"
 
@@ -431,7 +431,7 @@ So far, everything is working exactly as intended. Now ask yourself the second q
 
 An obvious abuse story is:
 
-> Abuse Story: A malicious user retrieves snapshots belonging to another team.
+> Abuser Story: As a malicious user, I want to retrieve snapshots belonging to another team.
 
 Now we've identified an attacker objective. The next step is to understand the threat scenario. How could this abuse actually happen? Perhaps the API fails to validate ownership correctly. Perhaps authorization checks are missing. Perhaps a user can simply modify a team identifier in an API request and access another team's data.
 
@@ -457,7 +457,7 @@ Again, ask yourself: What could go wrong?
 
 An abuse story might be:
 
-> A malicious user creates a virtual machine containing unauthorized software such as cryptocurrency mining tools.
+> Abuser Story: As a malicious user, I want to create a virtual machine containing unauthorized software such as cryptocurrency mining tools.
 
 Now consider the threat scenario. Perhaps users are allowed to install arbitrary software onto their virtual machines without restriction. Perhaps there's no validation of the images being uploaded.
 
@@ -479,7 +479,7 @@ One final example.
 
 Now consider another abuse story.
 
-> A malicious user deletes existing snapshots.
+> Abuser Story: As a malicious user, I want to delete existing snapshots.
 
 How could that happen? Perhaps ordinary users have excessive database permissions. Perhaps privileged administrative accounts aren't adequately protected. Perhaps a disgruntled database administrator deliberately deletes production snapshots.
 
