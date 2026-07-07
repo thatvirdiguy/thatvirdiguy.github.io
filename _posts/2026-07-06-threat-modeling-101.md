@@ -2,7 +2,7 @@ Welcome to Threat Modeling 101.
 
 The title is intentionally reminiscent of a university course. While there won't actually be an exam at the end, the goal is the same: to build a solid foundation that you can carry into real-world software and security work.
 
-Whether you're completely new to threat odeling or have heard terms like STRIDE and attack surface thrown around without fully understanding them, this guide is designed to provide a practical introduction. By the end, you should have a clear understanding of what threat modeling is, why it matters, and how to approach it in a structured way.
+Whether you're completely new to threat modeling or have heard terms like STRIDE and attack surface thrown around without fully understanding them, this guide is designed to provide a practical introduction. By the end, you should have a clear understanding of what threat modeling is, why it matters, and how to approach it in a structured way.
 
 We'll begin by answering the most fundamental question: What is threat modeling? Along the way, we'll look at a few commonly accepted definitions and discuss why threat modeling is an essential activity during the software development lifecycle – and why its value extends well beyond development itself. From there, we'll introduce some of the terminology you'll encounter during a threat modeling exercise. Understanding concepts such as threats, vulnerabilities, assets, risks, and mitigations makes it much easier to follow discussions and contribute effectively. Next, we'll explore some of the most widely used threat modeling methodologies, including STRIDE, and discuss where each approach fits. Finally, we'll walk through a practical threat modeling process based on a combination of established methodologies, before bringing everything together with a simple, end-to-end example.
 
@@ -24,13 +24,13 @@ Interestingly, this isn't a concept that's limited to cybersecurity or software 
 
 Software systems are no different. Instead of doors and windows, we examine APIs, authentication mechanisms, network boundaries, cloud infrastructure, third-party integrations, and data flows. We identify potential attack vectors, understand how an attacker might exploit them, and determine what security controls should exist before the software is deployed. The mindset is exactly the same. Only the system has changed.
 
-One of the most common misconceptions surrounding threat modeling is that it is simply another form of security review or audit. It isn't. A security audit evaluates an implementation that already exists. Threat modeling is a collaborative activity. that should ideally be done at the design stage, and is intended to shape the implementation before security issues become expensive to fix. Because of that, threat modeling should never be performed in isolation. While the security team often facilitates the exercise, the people who know the system best are the ones who build and operate it. A successful threat modeling session should involve as many relevant stakeholders as practical: security champions, software engineers, technical architects, platform engineers, DevOps engineers, and anyone else who understands how the application actually works. The goal isn't to have security tell engineering what's wrong. It's to combine everyone's knowledge of the system to identify risks that no single person would spot alone.
+One of the most common misconceptions surrounding threat modeling is that it is simply another form of security review or audit. It isn't. A security audit evaluates an implementation that already exists. Threat modeling is a collaborative activity that should ideally be done at the design stage, and is intended to shape the implementation before security issues become expensive to fix. Because of that, threat modeling should never be performed in isolation. While the security team often facilitates the exercise, the people who know the system best are the ones who build and operate it. A successful threat modeling session should involve as many relevant stakeholders as practical: security champions, software engineers, technical architects, platform engineers, and anyone else who understands how the application actually works. The goal isn't to have security tell engineering what's wrong. It's to combine everyone's knowledge of the system to identify risks that no single person would spot alone.
 
-Threat modeling is most effective when it's treated as part of the Secure Software Development Lifecycle (SSDLC), not as a checkpoint at the end of it. Conducting a threat model after the product has already been built often means that architectural decisions have been finalized, timelines have been committed, and implementing recommendations becomes significantly more expensive. In many cases, teams are forced to accept risks simply because fixing them would require redesigning major components.
+Threat modeling is most effective when it's treated as part of the Secure Software Development Lifecycle (SSDLC) and not as a checkpoint at the end of it. Conducting a threat model after the product has already been built often means that architectural decisions have been finalized, timelines have been committed, and implementing recommendations becomes significantly more expensive. In many cases, teams are forced to accept risks simply because fixing them would require redesigning major components.
 
 The earlier you perform a threat model, the greater the impact it can have.
 
-Ideally, threat modeling begins during feature design – while requirements are being discussed, diagrams are being sketched on whiteboards, and architectural decisions are still fluid. Sprint planning, design reviews, and architecture discussions are all excellent opportunities to introduce threat modeling. Of course, that ideal isn't always achievable. Teams move quickly and priorities can change. That's okay. So, at whatever stage of the SSDLC you feel "hey, we should probably do a threat model" that is a good enough stage to do a threat model at.
+Ideally, threat modeling begins during feature design – while requirements are being discussed, diagrams are being sketched on whiteboards, and architectural decisions are still fluid. Sprint planning, design reviews, and architecture discussions are all excellent opportunities to introduce threat modeling. Of course, that ideal isn't always achievable. Teams move quickly and priorities can change. That's okay. So, at whatever stage of the SSDLC you feel "hey, we should probably do a threat model" that is a good enough stage to do a threat model.
 
 ### The Four Questions of Threat Modeling
 
@@ -45,7 +45,7 @@ Everything else – whether it's STRIDE, attack trees, kill chains, or any other
 
 ### A Quick Refresher on Some Key Terms
 
-Before we dive into threat modeling methodologies and processes, let's quickly revisit a few terms that you'll hear repeatedly throughout this guide – and throughout any threat modeling exercise you participate in or lead.
+Before we dive into threat modeling methodologies and processes, let's quickly revisit a few terms that you'll hear repeatedly throughout this guide, and throughout any threat modeling exercise you participate in or lead.
 
 **Vulnerability**
 
@@ -94,9 +94,7 @@ A bug is an implementation defect – a coding mistake, configuration error, or 
 
 A flaw, however, is a weakness in the design or architecture of the system itself. It may involve missing trust boundaries, insecure authentication flows, poor authorization models, or assumptions that simply don't hold up against an attacker.
 
-You want to focus more on identifying the shortcomings in the design of the system than the shortcomings in the development/deployment of the system.
-
-Finding bugs during a threat modeling exercise is certainly valuable. Bugs often become entry points for attackers and should be addressed. But the real value of threat modeling lies in uncovering architectural flaws before they're built into the product. Design flaws are generally more expensive to fix once a system is in production, which is precisely why threat modeling aims to identify them as early as possible. In short, bugs are implementation problems. Flaws are design problems. A mature threat modeling practice focuses on both – but prioritizes finding the latter.
+You want to focus more on identifying the shortcomings in the design of the system than the shortcomings in the development/deployment of the system. Finding bugs during a threat modeling exercise is certainly valuable. Bugs often become entry points for attackers and should be addressed. But the real value of threat modeling lies in uncovering architectural flaws before they're built into the product. Design flaws are generally more expensive to fix once a system is in production, which is precisely why threat modeling aims to identify them as early as possible. In short, bugs are implementation problems. Flaws are design problems. A mature threat modeling practice focuses on both – but prioritizes finding the latter.
 
 ### Threat Modeling Methods and Approaches
 
@@ -237,7 +235,6 @@ Where STRIDE categorizes threats into six buckets, PASTA is risk-centric. Rather
 | 6. Attack Modeling                     | - Attack Surface Analysis <br> - Attack Tree Development / Attack Library Mgt. <br> - Attack to Vulnerability & Exploit Analysis Using Attack Trees                                                                                        |
 | 7. Risk & Impact Analysis              | - Qualify & Quantify Business Impact <br> - Countermeasure Identification and Residual Risk Analysis <br> - ID Risk Mitigation Strategies                                                                                                  |
 
-
 One of PASTA's strengths is that it encourages you to think beyond individual vulnerabilities. It asks not only what could happen, but also how likely it is, what the business impact would be, and which risks deserve immediate attention.
 
 #### DREAD
@@ -261,7 +258,6 @@ Once you've identified a potential threat, DREAD provides a simple framework for
 | Exploitability   | What’s Required to Launch the Attack?      | 2.5: Advanced programming and networking skills <br> 5: Available attack tools <br> 9: Web application proxies <br> 10: Web browser                                                                                                                               |
 | Affected Users   | How Many People Would the Attack Affect?   | 0: No users <br> 2.5: Individual user <br> 6: Few users <br> 8: Administrative users <br> 10: All users                                                                                                                                                           |
 | Discoverability  | How Easy Is the Vulnerability to Discover? | 0: Hard to discover the vulnerability <br> 5: HTTP requests can uncover the vulnerability <br> 8: Vulnerability found in the public domain <br> 10: Vulnerability found in web address bar or form                                                                |
-
 
 The key idea behind DREAD is that it introduces a degree of consistency into risk assessment. Rather than relying solely on intuition, teams evaluate each threat against the same set of criteria, making it easier to compare risks and prioritize remediation efforts. DREAD isn't as widely used today as it once was – many organizations have adopted alternative risk-scoring methodologies – but it remains a useful way to understand the factors that contribute to the overall severity of a threat.
 
@@ -291,7 +287,7 @@ Continuing with the same example, an abuse story might be:
 
 > As a malicious user, I want to upload a specially crafted file that compromises the expense reimbursement application.
 
-The user story describes intended behaviour. The abuse story describes unintended behaviour. Your role as a threat modeller is to bridge the gap between the two, which is the threat scenario. This is where you ask: How could this abuse actually happen?
+The user story describes intended behaviour. The abuse story describes unintended behaviour. Your role as a threat modeler is to bridge the gap between the two, which is the threat scenario. This is where you ask: How could this abuse actually happen?
 
 For our example, several possibilities immediately come to mind:
 
