@@ -352,7 +352,7 @@ Even if you never formally adopt Mozilla's methodology, there are valuable lesso
 
 We've now covered several threat modeling methodologies and approaches. The obvious question is: How do we actually do threat modeling at our organization?
 
-In my experience, there is no one method that works for all, because every organization is a little different. Threat modeling should fit your engineering process, not the other way around. I tend to tweak the process depending on the engineering team I'm collaborating with and how they work. The process described below is my recommended workflow. If, over time, you discover that a particular step doesn't work well for your team, adapt it. Skip it. Replace it with something that achieves the same objective more effectively.
+In my experience, there is no one method that works for all, because every organization is a little different. Threat modeling should fit your engineering process, not the other way around. I tend to tweak the process depending on the engineering team I'm collaborating with and how they work. The process described below is my recommended workflow. If, over time, you discover that a particular step doesn't work well for your team, replace it with something that achieves the same objective more effectively, or skip it altogether.
 
 **Step 1: The Scoping Call**
 
@@ -391,7 +391,6 @@ Earlier, we introduced the four fundamental questions of threat modeling. By now
 | What are we going to do about it? | Define the security controls and countermeasures required to mitigate those threats.                                                                                               |
 | Did we do an acceptable job?      | Verify that the agreed mitigations have been implemented and are effective. This validation may involve design reviews, testing, or independent verification by the security team. |
 
-
 Everything we've discussed throughout this guide ultimately comes back to these four questions. Whether you use STRIDE, PASTA, Story-Driven Threat Modeling, Mozilla's Rapid Risk Assessment, or a process of your own, every successful threat model seeks to answer them thoroughly and honestly.
 
 ### Putting It into Practice: A Simple Threat Modeling Exercise
@@ -400,7 +399,7 @@ We've covered the theory, the terminology, the methodologies, and the process. N
 
 ![Alt text](/images/threat-model/2026-07-06-threat-modeling-101.png "demo arch")
 
-For this demonstration, imagine a simple application consisting of:
+For this exercise, imagine a simple application consisting of:
 
 - A user interacting with a React frontend.
 - A backend service exposing APIs.
@@ -454,7 +453,7 @@ Let's look at another user story.
 
 Again, ask yourself: What could go wrong?
 
-An abuse story might be:
+An abuser story might be:
 
 > Abuser Story: As a malicious user, I want to create a virtual machine containing unauthorized software such as cryptocurrency mining tools.
 
@@ -468,7 +467,7 @@ Possible countermeasures include:
 - Scanning images before deployment.
 - Monitoring workloads for suspicious behaviour.
 
-Again, we've followed exactly the same process: User Story → Abuse Story → Threat Scenario → Countermeasures
+Again, we've followed exactly the same process: User Story → Abuser Story → Threat Scenario → Countermeasures
 
 Example 3: Deleting Snapshots
 
@@ -476,7 +475,7 @@ One final example.
 
 > User Story: A user creates and stores virtual machine snapshots.
 
-Now consider another abuse story.
+Now consider another abuser story.
 
 > Abuser Story: As a malicious user, I want to delete existing snapshots.
 
@@ -498,8 +497,8 @@ Possible countermeasures might include:
 By now, you've probably noticed that every example follows the same thought process.
 
 - Define the user story.
-- Think like an attacker and create one or more abuse stories.
-- Determine how each abuse story could realistically occur by developing threat scenarios.
+- Think like an attacker and create one or more abuser stories.
+- Determine how each abuser story could realistically occur by developing threat scenarios.
 - Agree on appropriate countermeasures.
 
 That's really all threat modeling is.
