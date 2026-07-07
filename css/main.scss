@@ -3,59 +3,73 @@
 ---
 @charset "utf-8";
 
-// Typography
+
+
+// Our variables
 $base-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-$base-font-size: 16px;
+$base-font-size:   16px;
 $base-font-weight: 400;
-$small-font-size: $base-font-size * 0.875;
-$base-line-height: 1.65;
+$small-font-size:  $base-font-size * 0.875;
+$base-line-height: 1.5;
 
-// Spacing
-$spacing-unit: 30px;
+$spacing-unit:     30px;
 
-// Colours
-$text-color: #111;
+$text-color:       #111;
 $background-color: #fdfdfd;
-$brand-color: #2a7ae2;
+$brand-color:      #2a7ae2;
 
-$grey-color: #828282;
+$grey-color:       #828282;
 $grey-color-light: lighten($grey-color, 40%);
-$grey-color-dark: darken($grey-color, 25%);
+$grey-color-dark:  darken($grey-color, 25%);
 
-// Layout
-$content-width: 720px;
+// Width of the content area
+$content-width:    800px;
 
-$on-palm: 600px;
-$on-laptop: 800px;
+$on-palm:          600px;
+$on-laptop:        800px;
 
+
+
+// Use media queries like this:
+// @include media-query($on-palm) {
+//     .wrapper {
+//         padding-right: $spacing-unit / 2;
+//         padding-left: $spacing-unit / 2;
+//     }
+// }
 @mixin media-query($device) {
-  @media screen and (max-width: $device) { @content; }
+    @media screen and (max-width: $device) {
+        @content;
+    }
 }
 
+
+
+// Import partials from `sass_dir` (defaults to `_sass`)
 @import
-  "base",
-  "layout",
-  "syntax-highlighting";
+        "base",
+        "layout",
+        "syntax-highlighting"
+;
+
+// dirty fix 
+/* Tables */
 
 table {
-  width: 100%;
-  margin: 2rem 0;
-  border-collapse: collapse;
-  font-size: .95rem;
+    width: 100%;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
 }
 
-th, td {
-  border: 1px solid $grey-color-light;
-  padding: .75rem 1rem;
-  vertical-align: top;
-  text-align: left;
+th,
+td {
+    border: 1px solid $grey-color-light;
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    vertical-align: top;
 }
 
 th {
-  background: lighten($grey-color-light, 8%);
-  font-weight: 600;
-}
-
-tbody tr:nth-child(even) {
-  background: #fafafa;
+    background-color: lighten($grey-color-light, 8%);
+    font-weight: 600;
 }
