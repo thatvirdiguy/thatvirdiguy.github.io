@@ -279,15 +279,15 @@ Once you've identified the user story, you map out how it works from a technical
 
 Data Flow Diagrams (DFDs) are particularly useful here because they allow everyone in the room to visualize the application's components, trust boundaries, and data flows. The objective is to understand the system well enough that you can begin thinking like an attacker.
 
-Once you understand what the system is supposed to do, ask yourself a different question: How could someone intentionally misuse this functionality? This is where abuse stories come in.
+Once you understand what the system is supposed to do, ask yourself a different question: How could someone intentionally misuse this functionality? This is where abuser stories come in.
 
-An abuse story is simply the malicious counterpart to a user story.
+An abuser story is simply the malicious counterpart to a user story.
 
-Continuing with the same example, an abuse story might be:
+Continuing with the same example, an abuser story might be:
 
 > As a malicious user, I want to upload a specially crafted file that compromises the expense reimbursement application.
 
-The user story describes intended behaviour. The abuse story describes unintended behaviour. Your role as a threat modeler is to bridge the gap between the two, which is the threat scenario. This is where you ask: How could this abuse actually happen?
+The user story describes intended behaviour. The abuser story describes unintended behaviour. Your role as a threat modeler is to bridge the gap between the two, which is the threat scenario. This is where you ask: How could this abuser actually happen?
 
 For our example, several possibilities immediately come to mind:
 
@@ -395,7 +395,7 @@ Everything we've discussed throughout this guide ultimately comes back to these 
 
 ### Putting It into Practice: A Simple Threat Modeling Exercise
 
-We've covered the theory, the terminology, the methodologies, and the process. Now let's put everything together with a simple example. The objective of this exercise isn't to teach another methodology or demonstrate the "correct" way to conduct a threat model. Instead, it's to show you how to think during a threat modeling exercise. Throughout this guide, we've introduced concepts such as user stories, abuse stories, threat scenarios, and countermeasures. This example simply demonstrates how they fit together in practice. You may eventually develop a different workflow that better suits your team, and that's perfectly fine. The goal here is simply to provide enough structure that you're never left wondering "okay... where do I even start?"
+We've covered the theory, the terminology, the methodologies, and the process. Now let's put everything together with a simple example. The objective of this exercise isn't to teach another methodology or demonstrate the "correct" way to conduct a threat model. Instead, it's to show you how to think during a threat modeling exercise. Throughout this guide, we've introduced concepts such as user stories, abuser stories, threat scenarios, and countermeasures. This example simply demonstrates how they fit together in practice. You may eventually develop a different workflow that better suits your team, and that's perfectly fine. The goal here is simply to provide enough structure that you're never left wondering "okay... where do I even start?"
 
 ![Alt text](/images/threat-model/2026-07-06-threat-modeling-101.png "demo arch")
 
@@ -427,7 +427,7 @@ Let's start with a simple user story.
 
 So far, everything is working exactly as intended. Now ask yourself the second question of threat modeling: What could go wrong?
 
-An obvious abuse story is:
+An obvious abuser story is:
 
 > Abuser Story: As a malicious user, I want to retrieve snapshots belonging to another team.
 
