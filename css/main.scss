@@ -3,8 +3,6 @@
 ---
 @charset "utf-8";
 
-
-
 // Our variables
 $base-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 $base-font-size:   16px;
@@ -28,31 +26,129 @@ $content-width:    800px;
 $on-palm:          600px;
 $on-laptop:        800px;
 
-
-
-// Use media queries like this:
-// @include media-query($on-palm) {
-//     .wrapper {
-//         padding-right: $spacing-unit / 2;
-//         padding-left: $spacing-unit / 2;
-//     }
-// }
 @mixin media-query($device) {
     @media screen and (max-width: $device) {
         @content;
     }
 }
 
-
-
-// Import partials from `sass_dir` (defaults to `_sass`)
+// Import partials
 @import
         "base",
         "layout",
         "syntax-highlighting"
 ;
 
-// dirty fix 
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+body {
+  line-height: 1.7;
+}
+
+p {
+  margin: 0 0 1.3rem;
+}
+
+h1 {
+  margin: 2rem 0 1rem;
+}
+
+h2 {
+  margin: 2.75rem 0 1rem;
+  padding-bottom: .3rem;
+  border-bottom: 1px solid #eee;
+}
+
+h3 {
+  margin: 2rem 0 .8rem;
+}
+
+h4 {
+  margin: 1.5rem 0 .6rem;
+}
+
+ul,
+ol {
+  margin-bottom: 1.3rem;
+}
+
+li {
+  margin-bottom: .35rem;
+}
+
+blockquote {
+  margin: 2rem 0;
+  padding: .5rem 1rem;
+  border-left: 4px solid #ddd;
+  background: #fafafa;
+  color: #555;
+}
+
+hr {
+  margin: 2.5rem 0;
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
 table {
-  margin: 1.5rem 0
+  width: 100%;
+  margin: 2rem 0;
+  border-collapse: collapse;
+  font-size: .95rem;
+}
+
+th,
+td {
+  padding: .75rem 1rem;
+  border: 1px solid #ddd;
+  vertical-align: top;
+  text-align: left;
+}
+
+th {
+  background: #f7f7f7;
+  font-weight: 600;
+}
+
+tbody tr:nth-child(even) {
+  background: #fcfcfc;
+}
+
+/* ==========================================================================
+   Images
+   ========================================================================== */
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 2rem auto;
+}
+
+/* ==========================================================================
+   Inline code
+   ========================================================================== */
+
+code {
+  padding: .1rem .3rem;
+  border-radius: 3px;
+  background: #f5f5f5;
+  font-size: .9em;
+}
+
+pre code {
+  padding: 0;
+  background: transparent;
+}
+
+/* ==========================================================================
+   Links
+   ========================================================================== */
+
+a {
+  text-underline-offset: 2px;
 }
