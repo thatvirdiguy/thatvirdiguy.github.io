@@ -61,9 +61,9 @@ When people discuss attackers during threat modeling, they're usually referring 
 
 Ultimately, the goal of a threat actor is to compromise one or more aspects of the CIA Triad:
 
-Confidentiality – accessing information they shouldn't have access to.
-Integrity – modifying data or systems without authorization.
-Availability – preventing legitimate users from accessing the service.
+- Confidentiality – accessing information they shouldn't have access to.
+- Integrity – modifying data or systems without authorization.
+- Availability – preventing legitimate users from accessing the service.
 
 For example, imagine a publicly accessible website that lacks appropriate controls, allowing an attacker to deface its contents. In that case, the primary security property being compromised is integrity.
 
