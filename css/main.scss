@@ -53,6 +53,10 @@ $on-laptop:        800px;
 ;
 
 // dirty fix 
-table + p {
-  margin-top: 1.5rem;
+table {
+  margin: 1.5rem 0
+}
+
+body {
+  outline: 10px solid red !important;
 }
